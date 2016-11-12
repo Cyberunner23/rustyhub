@@ -1,7 +1,11 @@
 [package]
 name = "rustyhub"
 version = "0.1.0"
+description = "A client for the Github v3 API"
 authors = ["Cyberunner23 <cyberunner23@protonmail.com>"]
+keywords = ["github", "api", "v3", "rest"]
+license = "MIT OR Apache-2.0"
+
 
 [dependencies]
 hyper = "0.9"
