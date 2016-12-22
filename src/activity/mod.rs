@@ -6,11 +6,6 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-extern crate hyper;
-extern crate serde;
-extern crate serde_json;
+///Reference: https://developer.github.com/v3/activity/
 
-pub mod client;
-pub mod error;
-pub mod utils;
-
+pub mod events;
