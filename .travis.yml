@@ -1,0 +1,44 @@
+language: rust
+sudo: false
+os:
+  - linux
+  - osx
+
+rust:
+  - nightly
+
+script:
+  cargo build
+
+cache: cargo
+
+env:
+  global:
+    - BUILD_DIRECTORY=*
+    - TRELLOBST_DIR=${HOME}/.TrelloBST
+    - TRELLOBST_EXEC=${TRELLOBST_DIR}/TrelloBST-${TRAVIS_OS_NAME}
+    - secure: YG6QGC3VBipO1WsSfeGWWsMRKyycZeJrvzHR9+VTEEkS83XJqAaUw+Lms4bE06U/5rmZiO7O82ahdvIEowt/u3UpHCn5miaQmI3RjrBb0rrV5lbtX8OOWMvBgmfQhwU0usUiJP4900Ca6QPZ55NG875034wB1/M1o8uOBz5PU2gls8XT92A7+lxhlLDINONP2ktYfmzo8zNVAzS/Y66KEwsLiqJCZZwzFldGRbLi9t2WaABCiEuiqEzoG5kRn3nEpGv+w9k3VYqMLwVLfhKIx7VMCwS9nMe+enIKtu2zyQdwswE2O7OUSMejYO9INakRSiLmUCtSK2WgfkMjTeDldX14zWWOFNWVCZsd129xWfjho/hf2Bug5ICx7HNI7k/jzMCwsXPc9gk49j6TNQWOBciu8987+6EHu7s5uwlazQi2I/qtIQY/wnPhAPoBIUqhJpVPryNLCwPt1CXXEsuOkct109olWZ7nRobFvG9dNSiB4G7RhuQ7Wom5DF0R5zEz8DZg4HB0m0Mb0iuvUUPIyBF4ikkPmxJQsFlLggywV/kdnQlTChHai8NRh5GDIlkfUR71kXOc2Lg5NUkdCYg2ig+OrpEkCgn7vw3EBgB6dKXp1OnN5m7bo+GEr+WT5sAyK/2ZIVs4Mo4+Ci1eYamY5mu4cG1S6Q2utfAByG3ZiCo=
+    - secure: DGAeaKJCFogHQHQk7HORMMPLxObvqsmnt4upCWCSNzClQABjv86XNdN3ifb9XuleiWHAL71MSmFofw9x7xtul2q1GlA+8jOvo0/dXKthT71NZzEqYUOVEA13fM/tE5p4gwRQ9IPWsT6AFi1isvb585lsLx5LH1hvld9xLWElWml5yiUiWoj018zlddiN9Dv3zyagGjV1CbkQWoVRYTlyB671wmsr6aV3Jiv+5W4A+eNL5D9nKnj5gFAqFRDOAJfP+OjSUFZ6BZPSI/ARUoFoB0yPZzmbeQTvs6GLSxNCuQ/i60L6V+fvIm55dPC2uCtAf3/Cg+glHikYQ27dpt6dHcnpBgwRakm7ixXvWA9sg/jQzjWcuo5bMfh3sKccxDkGypw+u3CTp9wwIdU1JJ9ds9vTF4byTAMwpQng/1UTHABKerSrsJ6jNUt3wbkDlgVaIw5xEZ4dynC1sOFFJTWCcCBySA7X0hLwQeTTPZuF3sb593YHauAxs9WiYxQnwlxEE85txukzTzKOrAtlXq57DF7WwD8+TCtmEWJKYNo4iVv4+IAFyqbNPJbY1/37+Rps4YvtnGE1GDi4nlXN8yCgZ+BPMjLzmJo2pZ+zvbuAC0QPFrSyinBNT7w8LCFHNonRgx9xQTUa+EZwUCqOAtimE4Dw5rntlKroiMlhS8crykw=
+    - secure: M3Zz5287WJjecET5qiTCdS8sV8ITojjfE7r7jGnDvGKesfl5BUes90Bja/CXTN5iootaj4wjga66YyTG+UqvK97wSrYODNG2HGDDWQJjWfqxf0ymA6NLhswVGJu21jG5/CWts7ngLJgqZ9mtOToKkj3udf9Q9dKLuUtm1Mw6CFl9KRN1QHc5LJMYphFyxjTYDia81jaJamGnNRPKVa+Bpp/zHTrtXfKYoHS0jHLvw8HghbU5FwC6OPOwNmsBZqlcGBlDobWIA5WrPb804d96XfH64ZFxDUR8S9ZhskT6efPYaLsp8XFPjes4+IqHScPcm7kCcDkC2H2DmSIktyH/Fm0t/Clv8g414/vlQDmJWU7tB85ClBc3CpGy3YU7eyy5a//MHh/x58Z40OVhJ0u+PGBPHFAC52NZdlLRYqbb33PyB3iTBV07VOyXstP0M94r37aXhDmS2y8bVb1sryIDb99nsPXKMDj5P5qQxaoMt2xD/QyauEyrMP4k0ejRw8ddjWVpftg610noLmBqjP5G979lFS4RKR18o14y7QAjmhsHnPIaJ+zlso9diCW67aHosStYDK4UE/vZyIEAN2gfZvCDRyTSN2Utr79WSAUgfq30dU38oh3LyhubMASkV2FcJeKg564RDmwJL+0nOaHhWdh+DY1AoXvqNRhyaYXu2Hg=
+    - secure: lkCyzVfEitxlyg1WOOEwP23X4pcuCBSa6xWaM4xX+GQ5gcphRPf78Kt3teHz1SfNe57mk6P6CankoLl1r5/t644S/rPfkMSnM/19V3WYo/6m5L02OlZsH2QzCPE4e/AVQo+ILPf1wEDX/gSvThdvS1fEXWe5N8yARxtXeC+CeTgU08YVXH1v4mbciviKHci/H6wwflmdwAseqotms7Ejvjbw0fchYwLRyLhA1Zj46IDIUM+AeqlmyoOYDuUPbuyh7X61JC7xe8cBnSypVQuavmlWn7KKSav6whAxTYXFeBRsw6d5Xu5YklIVMzADqf7OyJHJYxMURCtWGgTAzzhAJys7pirE1RPGxFE56mgFUHBtXdlHHTYE9lM98THlGNZCe8Od3jfngbusqiq77D2C3be7Wy3z/P8rwvTEfivuEx1JWeiTYLYm82wGyMc1YGkir0AMs0Fzeop7X0dmm46rWgmLwqWlNbtncbwLOSMTz5wQrXW9CFxA+A58adT0HYY2kdtHCEPDJ4p7XPiEmELME6BwA95CesQjE6sxklh1LDYvUg7dg/eFeHz9LwbSrjNV1Cb9yTBvNBapw74f3Y3WF+Fd5hKy1GzWgREfZ7I9DmfVsIUeJ/ndaPbOobsrhoLgdpmnuXsSevX5OrecbSAcfzm5FvE/9tGcjlodr99s7tg=
+
+before_install:
+  - wget -q https://github.com/Cyberunner23/TrelloBST/releases/download/v2.0.0-pre1/Travis-${TRAVIS_OS_NAME}-stable.tar.gz
+  - mkdir ${TRELLOBST_DIR}
+  - tar -xvf Travis-${TRAVIS_OS_NAME}-stable.tar.gz -C ${TRELLOBST_DIR}
+
+after_success:
+  - 'if [ ${TRAVIS_SECURE_ENV_VARS} = true ] ; then
+           tar -zcf build.tar.gz ${BUILD_DIRECTORY}
+        && export BUILD_LINK=$(curl --upload-file ./build.tar.gz https://transfer.sh/build.tar.gz)
+        && export TRELLO_CARD_TITLE="[${TRAVIS_BRANCH}][Travis-CI][${TRAVIS_OS_NAME}][gcc]: #${TRAVIS_BUILD_NUMBER} PASSED"
+        && export TRELLO_CARD_DESC="[Build]\: ${BUILD_LINK}"$''\n''"[Logs]\: https://travis-ci.org/${TRAVIS_REPO_SLUG}/jobs/${TRAVIS_JOB_ID}"
+        && ${TRELLOBST_EXEC} push --pass --title "${TRELLO_CARD_TITLE}" --description "${TRELLO_CARD_DESC}";
+    fi'
+
+after_failure:
+  - 'if [ ${TRAVIS_SECURE_ENV_VARS} = true ] ; then
+           export TRELLO_CARD_TITLE="[${TRAVIS_BRANCH}][Travis-CI][${TRAVIS_OS_NAME}][gcc]: #${TRAVIS_BUILD_NUMBER} FAILED"
+        && export TRELLO_CARD_DESC="[Logs]\: https://travis-ci.org/${TRAVIS_REPO_SLUG}/jobs/${TRAVIS_JOB_ID}"
+        && ${TRELLOBST_EXEC} push --fail --title "${TRELLO_CARD_TITLE}" --description "${TRELLO_CARD_DESC}";
+    fi'
