@@ -19,6 +19,10 @@ environment:
     secure: 4DvBNLC9G2oxmiHh1FDsGq8B0amdpQEwVOMWbDa/yu4=
 
 install:
+
+install:
+  - ps: Start-FileDownload "https://slproweb.com/download/Win64OpenSSL-1_0_2j.exe"
+  - Win64OpenSSL-1_0_2j.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
   - ps: |
         .\appveyor_rust_install.ps1 nightly
         Invoke-WebRequest "https://github.com/Cyberunner23/TrelloBST/releases/download/v2.0.0-pre1/AppVeyor-win-stable.zip" -OutFile "./AppVeyor-win-stable.zip"

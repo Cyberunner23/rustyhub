@@ -7,6 +7,13 @@ os:
 rust:
   - nightly
 
+before_script:
+  - if [ ${TRAVIS_OS_NAME} == "osx" ] ; then
+         export OPENSSL_INCLUDE_DIR=$(brew --prefix openssl)/include
+      && export DEP_OPENSSL_INCLUDE=$(brew --prefix openssl)/include;
+    fi
+
+
 script:
   cargo build
 
