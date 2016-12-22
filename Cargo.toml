@@ -9,5 +9,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 hyper = "0.9"
+log = "0.3.6"
 serde = "0.8"
+serde_derive = "0.8"
 serde_json = "0.8"

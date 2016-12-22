@@ -6,7 +6,7 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-
+/*
 use std::collections::BTreeMap;
 use serde_json::Value;
 use error::{Error, DecodeError};
@@ -52,4 +52,4 @@ pub fn extract_bool(object: &mut BTreeMap<String, Value>, field: &'static str) -
 /// Small utility to extract a JSON Value from an object map
 pub fn extract_map_val(object: &mut BTreeMap<String, Value>, field: &'static str) -> Result<Value, Error> {
     object.remove(field).ok_or(Error::Decoding(DecodeError::FieldNotFound(field.clone(), Value::Object(object.clone()))))
-}
+}*/

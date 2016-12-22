@@ -6,10 +6,17 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+#![feature(proc_macro)]
+
 extern crate hyper;
+#[macro_use]
+extern crate log;
 extern crate serde;
+#[macro_use]
+extern crate serde_derive;
 extern crate serde_json;
 
+pub mod activity;
 pub mod client;
 pub mod error;
 pub mod utils;
