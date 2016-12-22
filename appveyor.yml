@@ -6,6 +6,9 @@ cache:
   - '%UserProfile%\.cargo'
 
 environment:
+  OPENSSL_LIB_DIR: C:\OpenSSL\lib\VC
+  OPENSSL_LIBS: ssleay32MD:libeay32MD
+  OPENSSL_INCLUDE_DIR: C:\OpenSSL\include
   BUILD_DIRECTORY: .\target
   TRELLOBST_DIR: '%APPVEYOR_BUILD_FOLDER%\TrelloBST'
   TRELLOBST_EXEC: '%TRELLOBST_DIR%\TrelloBST.exe'
@@ -14,9 +17,9 @@ environment:
   TRELLO_API_LIST_ID:
     secure: wtQVUHP4/Tfc17pi0ALcDtyLBaGawKZU6gGUUFu8x24=
   TRELLO_API_BUILD_PASS_ID:
-    secure: A+njPlb37w+C6iUOc4BF4FGUgQEyXwvUnQS4i0XdpRo=
+    secure: ER42T8YtQQDUbDssWsNzEE2peCA6gcTKavPyF+Bjcqc=
   TRELLO_API_BUILD_FAIL_ID:
-    secure: 4DvBNLC9G2oxmiHh1FDsGq8B0amdpQEwVOMWbDa/yu4=
+    secure: Rlf5WTk1uy980xtAo4Ak4lbOG4wmrFBidVT5uQMwphY=
 
 install:
   - ps: Start-FileDownload "https://slproweb.com/download/Win64OpenSSL-1_0_2j.exe"
