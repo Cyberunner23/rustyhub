@@ -26,7 +26,7 @@ use hyper::status::StatusCode;
 use error;
 
 /// The default API URL.
-static DEFAULT_API_URL: &'static str = "https://api.github.com/";
+static DEFAULT_API_URL: &'static str = "https://api.github.com";
 
 /// Struct with client state, values in this struct may be modified at any time,
 /// the new values will be used from the next API call
@@ -229,7 +229,7 @@ mod client_test {
     #[test]
     fn client_new() {
         let client = super::Client::new("rustyhub-test/0.0.0", Some("test-token".to_string()));
-        assert!(client.api_url    == String::from("https://api.github.com/"));
+        assert!(client.api_url    == String::from("https://api.github.com"));
         assert!(client.user_agent == String::from("rustyhub-test/0.0.0"));
         assert!(client.auth_token == Some(String::from("test-token")));
     }
