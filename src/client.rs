@@ -147,10 +147,7 @@ impl Client {
     pub fn get(&mut self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
 
         //if no headers use default
-        let request_header = match header {
-            Some(header) => header,
-            None         => self.get_default_header()
-        };
+        let request_header = header.unwrap_or_else(|| self.get_default_header());
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
