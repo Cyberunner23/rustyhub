@@ -9,3 +9,4 @@
 ///Reference: https://developer.github.com/v3/activity/
 
 pub mod events;
+pub mod feeds;
