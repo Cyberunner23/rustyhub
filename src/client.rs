@@ -155,17 +155,17 @@ impl Client {
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
-        let mut response = match self.http_client.request(method, &format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).send() {
-            Ok(response) => response,
-            Err(err)     => return Err(error::Error::HTTP(err))
-        };
+        let mut response = try!(self.http_client.request(method, &format!("{}{}", self.api_url, endpoint)[..])
+                                                .headers(request_header)
+                                                .send()
+                                                .map_err(error::Error::HTTP));
 
         //Handle redirects
         while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
-            response = match self.http_client.get(&loc[..]).headers(request_header_copy.clone()).send() {
-                Ok(response) => response,
-                Err(err)     => return Err(error::Error::HTTP(err))
-            };
+            response = try!(self.http_client.get(&loc[..])
+                                            .headers(request_header_copy.clone())
+                                            .send()
+                                            .map_err(error::Error::HTTP));
         }
 
         //Handle error
@@ -185,19 +185,22 @@ impl Client {
         let request_header = header.unwrap_or_else(|| self.get_default_header());
 
         //In case we get redirected, we will need the same headers
-        let     body_len            = body.clone().len();
         let     request_header_copy = request_header.clone();
-        let mut response = match self.http_client.request(method.clone(), &format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).body(Body::BufBody(&body.into_bytes()[..], body_len)).send() {
-            Ok(response) => response,
-            Err(err)     => return Err(error::Error::HTTP(err))
-        };
+        let     body_len  = body.clone().len();
+        let     body_copy = body.clone();
+        let mut response  = try!(self.http_client.request(method.clone(), &format!("{}{}", self.api_url, endpoint)[..])
+                                                 .headers(request_header)
+                                                 .body(Body::BufBody(&body.into_bytes()[..], body_len))
+                                                 .send()
+                                                 .map_err(error::Error::HTTP));
 
         //Handle redirects
         while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
-            response = match self.http_client.request(method.clone(), &loc[..]).headers(request_header_copy.clone()).send() {
-                Ok(response) => response,
-                Err(err)     => return Err(error::Error::HTTP(err))
-            };
+            response = try!(self.http_client.request(method.clone(), &loc[..])
+                                            .headers(request_header_copy.clone())
+                                            .body(Body::BufBody(&body_copy.clone().into_bytes()[..], body_len))
+                                            .send()
+                                            .map_err(error::Error::HTTP));
         }
 
         //Handle error
