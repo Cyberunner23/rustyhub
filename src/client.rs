@@ -61,7 +61,7 @@ impl Client {
     }
 
     /// Returns the default header used
-    pub fn get_default_header(&mut self) -> Headers {
+    pub fn get_default_header(&self) -> Headers {
         let mut header = Headers::new();
         header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3+json".to_string()), vec![]))])); //"application/vnd.github.v3+json"
         header.set(UserAgent(self.user_agent[..].to_owned()));
@@ -70,8 +70,7 @@ impl Client {
     }
 
     //Utils
-    fn get_redirect(source_url: &String, response: &mut Response) -> Option<String> {
-
+    fn get_redirect(source_url: &String, response: &Response) -> Option<String> {
         match response.status {
             StatusCode::MovedPermanently  |
             StatusCode::TemporaryRedirect |
