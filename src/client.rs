@@ -74,15 +74,14 @@ impl Client {
         match response.status {
             StatusCode::MovedPermanently  |
             StatusCode::TemporaryRedirect |
-            StatusCode::PermanentRedirect => match response.headers.get() {
-                Some(&Location(ref loc)) => {
+            StatusCode::PermanentRedirect =>
+                response.headers.get().map(|&Location(ref loc)| {
                     if response.status == StatusCode::PermanentRedirect {
-                        info!("{} as been permanently redirected, please notify the rustyhub developer that it has been moved to {}", source_url, loc);
+                        info!("{} as been permanently redirected, please notify
+                              the rustyhub developer that it has been moved to {}", source_url, loc);
                     }
-                    Some(loc.clone())
-                },
-                None => None
-            },
+                    loc.clone()
+                }),
             _ => None
         }
     }
@@ -91,7 +90,6 @@ impl Client {
         match response.status {
             StatusCode::BadRequest  |
             StatusCode::UnprocessableEntity => {
-
                 let body_data = match Client::response_to_string(response) {
                     Ok(data) => data,
                     Err(err) => return Some(err)
@@ -108,11 +106,9 @@ impl Client {
 
     pub fn response_to_string(response: &mut Response) -> Result<String, error::Error> {
         let mut body_data = String::new();
-        match response.read_to_string(&mut body_data) {
-            Ok(_)    => (),
-            Err(err) => return Err(error::Error::STDIO(err))
-        }
-        return Ok(body_data);
+        response.read_to_string(&mut body_data)
+                .map(|_| body_data)
+                .map_err(error::Error::STDIO)
     }
 
     //option, none if not found
