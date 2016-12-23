@@ -67,5 +67,12 @@ pub fn get_events(client: &mut Client) -> Result<Vec<Event>, error::Error> {
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
 
+///Reference: https://developer.github.com/v3/activity/events/#list-repository-events
+pub fn get_repo_events(client: &mut Client, owner: String, repo: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/repos/{}/{}/events", owner, repo).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
 
 //TODO: tests
