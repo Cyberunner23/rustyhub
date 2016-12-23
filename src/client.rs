@@ -207,6 +207,71 @@ impl Client {
 
         Ok(response)
     }
+
+
+    pub fn post(&mut self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+
+        //if no headers use default
+        let request_header = match header {
+            Some(header) => header,
+            None         => self.get_default_header()
+        };
+
+        //In case we get redirected, we will need the same headers
+        let     request_header_copy = request_header.clone();
+        let mut response = match self.http_client.post(&format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).send() {
+            Ok(response) => response,
+            Err(err)     => return Err(error::Error::HTTP(err))
+        };
+
+        //Handle redirects
+        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
+            response = match self.http_client.post(&loc[..]).headers(request_header_copy.clone()).send() {
+                Ok(response) => response,
+                Err(err)     => return Err(error::Error::HTTP(err))
+            };
+        }
+
+        //Handle error
+        if let Some(err) = Client::get_error(&mut response) {
+            return Err(err)
+        }
+
+        Ok(response)
+    }
+
+    //POST with a body
+    pub fn post_body(&mut self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
+
+        //if no headers use default
+        let request_header = match header {
+            Some(header) => header,
+            None         => self.get_default_header()
+        };
+
+        //In case we get redirected, we will need the same headers
+        let     body_len            = body.clone().len();
+        let     request_header_copy = request_header.clone();
+        let mut response = match self.http_client.post(&format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).body(Body::BufBody(&body.into_bytes()[..], body_len)).send() {
+            Ok(response) => response,
+            Err(err)     => return Err(error::Error::HTTP(err))
+        };
+
+        //Handle redirects
+        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
+            response = match self.http_client.post(&loc[..]).headers(request_header_copy.clone()).send() {
+                Ok(response) => response,
+                Err(err)     => return Err(error::Error::HTTP(err))
+            };
+        }
+
+        //Handle error
+        if let Some(err) = Client::get_error(&mut response) {
+            return Err(err)
+        }
+
+        Ok(response)
+    }
 }
 
 
