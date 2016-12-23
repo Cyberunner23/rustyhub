@@ -74,5 +74,58 @@ pub fn get_repo_events(client: &mut Client, owner: String, repo: String) -> Resu
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
 
+//TODO: GET /repos/:owner/:repo/issues/events
+///Reference: https://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository
+
+///Reference: https://developer.github.com/v3/activity/events/#list-public-events-for-a-network-of-repositories
+pub fn get_networks_owner_repo_events(client: &mut Client, owner: String, repo: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/networks/{}/{}/events", owner, repo).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+///Reference: https://developer.github.com/v3/activity/events/#list-public-events-for-an-organization
+pub fn get_orgs_org_events(client: &mut Client, org: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/orgs/{}/events", org).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+///Reference: https://developer.github.com/v3/activity/events/#list-events-that-a-user-has-received
+pub fn get_users_username_received_events(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/users/{}/received_events", username).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+///Reference: https://developer.github.com/v3/activity/events/#list-public-events-that-a-user-has-received
+pub fn get_users_username_received_events_public(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/users/{}/received_events/public", username).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+///Reference: https://developer.github.com/v3/activity/events/#list-events-performed-by-a-user
+pub fn get_users_username_events(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/users/{}/events", username).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+///Reference: https://developer.github.com/v3/activity/events/#list-public-events-performed-by-a-user
+pub fn get_users_username_events_public(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/users/{}/events/public", username).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+///Reference: https://developer.github.com/v3/activity/events/#list-events-for-an-organization
+pub fn get_users_username_events_orgs_org(client: &mut Client, username: String, org: String) -> Result<Vec<Event>, error::Error> {
+    let mut response     = try!(client.get(format!("/users/{}/events/orgs/{}", username, org).to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+}
+
+
 
 //TODO: tests
