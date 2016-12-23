@@ -7,10 +7,11 @@
 // copied, modified, or distributed except according to those terms.
 
 use std::collections::BTreeMap;
+use serde_json;
 use serde_json::Value;
 
 use client::Client;
-use error::Error;
+use error;
 
 
 ///Reference: https://developer.github.com/v3/activity/events/
@@ -21,20 +22,12 @@ pub struct Event {
     #[serde(rename = "type")]
     event_type: String,
     public:     bool,
-    #[serde(skip_deserializing)]
-    payload:    Payload,
+    payload:    BTreeMap<String, Value>,
     repo:       Repository,
     actor:      Actor,
     org:        Organization,
     created_at: String,
     id:         u64
-}
-
-
-/// Each event type has a unique payload structure, for that matter payload data is stored as an object map.
-#[derive(Clone, Debug, Default, PartialEq)]
-pub struct Payload {
-    payload: BTreeMap<String, Value>
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
@@ -67,17 +60,12 @@ pub struct Organization {
 //                       Functions                        //
 ////////////////////////////////////////////////////////////
 
-/*pub fn get_events(client: &Client) -> Result<Vec<Event>, Error> {
-
-
-
-    //copy of json
-    //parse json to Value
-    //parse json to Vec<Event>
-    //for each event in Value, extract payload -> ValueMap
-    //inject in Event
-
-}*/
+pub fn get_events(client: &mut Client) -> Result<Vec<Event>, error::Error> {
+    match serde_json::from_str(&try!(Client::response_to_string(&mut try!(client.get("/events".to_string(), None))))[..]) {
+        Ok(events) => Ok(events),
+        Err(err)   => Err(error::Error::Parsing(err))
+    }
+}
 
 
 //TODO: tests

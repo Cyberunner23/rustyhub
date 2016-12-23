@@ -29,6 +29,7 @@ static DEFAULT_API_URL: &'static str = "https://api.github.com";
 
 /// Struct with client state, values in this struct may be modified at any time,
 /// the new values will be used from the next API call
+/// Handles averything related to HTTP
 #[derive(Debug)]
 pub struct Client {
 
@@ -69,7 +70,7 @@ impl Client {
     }
 
     //Utils
-    fn get_redirect(source_url: &String, response: &Response) -> Option<String> {
+    fn get_redirect(source_url: &String, response: &mut Response) -> Option<String> {
 
         match response.status {
             StatusCode::MovedPermanently  |
@@ -91,11 +92,11 @@ impl Client {
         match response.status {
             StatusCode::BadRequest  |
             StatusCode::UnprocessableEntity => {
-                let mut body_data = String::new();
-                match response.read_to_string(&mut body_data) {
-                    Ok(_)    => (),
-                    Err(err) => return Some(error::Error::STDIO(err))
-                }
+
+                let body_data = match Client::response_to_string(response) {
+                    Ok(data) => data,
+                    Err(err) => return Some(err)
+                };
 
                 match serde_json::from_str(&body_data) {
                     Ok(err_response) => return Some(error::Error::Github(err_response)),
@@ -106,8 +107,44 @@ impl Client {
         }
     }
 
+    pub fn response_to_string(response: &mut Response) -> Result<String, error::Error> {
+        let mut body_data = String::new();
+        match response.read_to_string(&mut body_data) {
+            Ok(_)    => (),
+            Err(err) => return Err(error::Error::STDIO(err))
+        }
+        return Ok(body_data);
+    }
+
+    //option, none if not found
+    /*pub fn extract_header_string(header: &Headers, field: &str) -> Result<Option<String>, error::Error> {
+
+        match header.get_raw(field) {
+            Some(value) => {
+                match String::from_utf8(value[0].clone()) {
+                    Ok(value_string) => return Ok(Some(value_string)),
+                    Err(err)         => return Err(error::Error::STDUtf8(err))
+                }
+            }
+            None => return Ok(None)
+        }
+    }
+
+    pub fn extract_header_u64(header: &Headers, field: &str) -> Result<Option<u64>, error::Error> {
+        let value = try!(Client::extract_header_string(&header, &field));
+        match value {
+            Some(value) => {
+                match value.parse::<u64>() {
+                    Ok(value_string) => return Ok(Some(value_string)),
+                    Err(err)         => return Err(error::Error::STDParseInt(err))
+                }
+            },
+            None => Ok(None)
+        }
+    }*/
+
     //HTTP Methods
-    pub fn get(&mut self, endpoint: &'static str, header: Option<Headers>) -> Result<Response, error::Error> {
+    pub fn get(&mut self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
 
         //if no headers use default
         let request_header = match header {
@@ -123,7 +160,7 @@ impl Client {
         };
 
         //Handle redirects
-        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &response) {
+        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
             response = match self.http_client.get(&loc[..]).headers(request_header_copy.clone()).send() {
                 Ok(response) => response,
                 Err(err)     => return Err(error::Error::HTTP(err))
@@ -138,7 +175,6 @@ impl Client {
         Ok(response)
     }
 }
-
 
 
 //TODO: Tests

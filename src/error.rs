@@ -6,7 +6,7 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-use std::io::Error as STDIOError;
+use std::io::Error as IOError;
 
 /// Represents all possible errors than can occur while using rustyhub.
 pub enum Error {
@@ -17,8 +17,8 @@ pub enum Error {
     HTTP(::hyper::Error),
     /// Error returned by serde when parsing JSON data from a string.
     Parsing(::serde_json::Error),
-    /// Error returned by functions in std
-    STDIO(STDIOError)
+    /// Errors returned by functions in std
+    STDIO(IOError),
 }
 
 #[derive(Debug, Deserialize)]
