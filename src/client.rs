@@ -19,6 +19,7 @@ use hyper::header::{Accept,
                     Location,
                     qitem,
                     UserAgent};
+use hyper::method::Method;
 use hyper::mime::{Mime, TopLevel, SubLevel};
 use hyper::status::StatusCode;
 
@@ -139,14 +140,22 @@ impl Client {
     }*/
 
     //HTTP Methods
-    pub fn get(&mut self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+    pub fn get(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(endpoint, header, Method::Get)
+    }
 
+    pub fn post(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(endpoint, header, Method::Post)
+    }
+
+
+    fn make_request(&self, endpoint: String, header: Option<Headers>, method: Method) -> Result<Response, error::Error> {
         //if no headers use default
         let request_header = header.unwrap_or_else(|| self.get_default_header());
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
-        let mut response = match self.http_client.get(&format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).send() {
+        let mut response = match self.http_client.request(method, &format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).send() {
             Ok(response) => response,
             Err(err)     => return Err(error::Error::HTTP(err))
         };
@@ -154,6 +163,38 @@ impl Client {
         //Handle redirects
         while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
             response = match self.http_client.get(&loc[..]).headers(request_header_copy.clone()).send() {
+                Ok(response) => response,
+                Err(err)     => return Err(error::Error::HTTP(err))
+            };
+        }
+
+        //Handle error
+        if let Some(err) = Client::get_error(&mut response) {
+            return Err(err)
+        }
+
+        Ok(response)
+    }
+
+    fn make_request_body(&self,
+                         method: Method,
+                         endpoint: String,
+                         header: Option<Headers>,
+                         body: String) -> Result<Response, error::Error> {
+        //if no headers use default
+        let request_header = header.unwrap_or_else(|| self.get_default_header());
+
+        //In case we get redirected, we will need the same headers
+        let     body_len            = body.clone().len();
+        let     request_header_copy = request_header.clone();
+        let mut response = match self.http_client.request(method.clone(), &format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).body(Body::BufBody(&body.into_bytes()[..], body_len)).send() {
+            Ok(response) => response,
+            Err(err)     => return Err(error::Error::HTTP(err))
+        };
+
+        //Handle redirects
+        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
+            response = match self.http_client.request(method.clone(), &loc[..]).headers(request_header_copy.clone()).send() {
                 Ok(response) => response,
                 Err(err)     => return Err(error::Error::HTTP(err))
             };
@@ -168,101 +209,14 @@ impl Client {
     }
 
     //GET with a body
-    pub fn get_body(&mut self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-
-        //if no headers use default
-        let request_header = match header {
-            Some(header) => header,
-            None         => self.get_default_header()
-        };
-
-        //In case we get redirected, we will need the same headers
-        let     body_len            = body.clone().len();
-        let     request_header_copy = request_header.clone();
-        let mut response = match self.http_client.get(&format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).body(Body::BufBody(&body.into_bytes()[..], body_len)).send() {
-            Ok(response) => response,
-            Err(err)     => return Err(error::Error::HTTP(err))
-        };
-
-        //Handle redirects
-        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
-            response = match self.http_client.get(&loc[..]).headers(request_header_copy.clone()).send() {
-                Ok(response) => response,
-                Err(err)     => return Err(error::Error::HTTP(err))
-            };
-        }
-
-        //Handle error
-        if let Some(err) = Client::get_error(&mut response) {
-            return Err(err)
-        }
-
-        Ok(response)
+    pub fn get_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Get, endpoint, header, body)
     }
 
-
-    pub fn post(&mut self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-
-        //if no headers use default
-        let request_header = match header {
-            Some(header) => header,
-            None         => self.get_default_header()
-        };
-
-        //In case we get redirected, we will need the same headers
-        let     request_header_copy = request_header.clone();
-        let mut response = match self.http_client.post(&format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).send() {
-            Ok(response) => response,
-            Err(err)     => return Err(error::Error::HTTP(err))
-        };
-
-        //Handle redirects
-        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
-            response = match self.http_client.post(&loc[..]).headers(request_header_copy.clone()).send() {
-                Ok(response) => response,
-                Err(err)     => return Err(error::Error::HTTP(err))
-            };
-        }
-
-        //Handle error
-        if let Some(err) = Client::get_error(&mut response) {
-            return Err(err)
-        }
-
-        Ok(response)
-    }
 
     //POST with a body
-    pub fn post_body(&mut self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-
-        //if no headers use default
-        let request_header = match header {
-            Some(header) => header,
-            None         => self.get_default_header()
-        };
-
-        //In case we get redirected, we will need the same headers
-        let     body_len            = body.clone().len();
-        let     request_header_copy = request_header.clone();
-        let mut response = match self.http_client.post(&format!("{}{}", self.api_url, endpoint)[..]).headers(request_header).body(Body::BufBody(&body.into_bytes()[..], body_len)).send() {
-            Ok(response) => response,
-            Err(err)     => return Err(error::Error::HTTP(err))
-        };
-
-        //Handle redirects
-        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
-            response = match self.http_client.post(&loc[..]).headers(request_header_copy.clone()).send() {
-                Ok(response) => response,
-                Err(err)     => return Err(error::Error::HTTP(err))
-            };
-        }
-
-        //Handle error
-        if let Some(err) = Client::get_error(&mut response) {
-            return Err(err)
-        }
-
-        Ok(response)
+    pub fn post_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Post, endpoint, header, body)
     }
 }
 
