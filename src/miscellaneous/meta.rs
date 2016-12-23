@@ -26,10 +26,9 @@ pub struct Meta {
 ////////////////////////////////////////////////////////////
 
 pub fn get_meta(client: &mut Client) -> Result<Meta, error::Error> {
-    match serde_json::from_str(&try!(Client::response_to_string(&mut try!(client.get("/meta".to_string(), None))))[..]) {
-        Ok(meta) => Ok(meta),
-        Err(err) => Err(error::Error::Parsing(err))
-    }
+    let mut response     = try!(client.get("/meta".to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
 
 //TODO: TESTS

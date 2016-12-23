@@ -33,6 +33,7 @@ pub enum MarkdownRawMIME {
 //                       Functions                        //
 ////////////////////////////////////////////////////////////
 
+///Reference: https://developer.github.com/v3/markdown/#render-an-arbitrary-markdown-document
 pub fn post_markdown(client: &mut Client, request_body: &MarkdownRequest) -> Result<String, error::Error> {
 
     //Set Content-Type
@@ -41,21 +42,15 @@ pub fn post_markdown(client: &mut Client, request_body: &MarkdownRequest) -> Res
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Html, vec![]))]));
 
     //Create body
-    let body_data = match serde_json::to_string(&request_body) {
-        Ok(body_data) => body_data,
-        Err(err)      => return Err(error::Error::Parsing(err))
-    };
+    let body_data = try!(serde_json::to_string(&request_body).map_err(error::Error::Parsing));
 
-    Ok(try!(Client::response_to_string(&mut try!(client.post_body("/markdown".to_string(), Some(header), body_data)))))
+    let mut response     = try!(client.post_body("/markdown".to_string(), Some(header), body_data));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
 
+///Reference: https://developer.github.com/v3/markdown/#render-a-markdown-document-in-raw-mode
 pub fn post_markdown_raw(client: &mut Client, request_body: &MarkdownRequest, mime: MarkdownRawMIME) -> Result<String, error::Error> {
-
-    //Create body
-    let body_data = match serde_json::to_string(&request_body) {
-        Ok(body_data) => body_data,
-        Err(err)      => return Err(error::Error::Parsing(err))
-    };
 
     //Edit Accept and set Content-Type
     let mut header: Headers = client.get_default_header();
@@ -67,5 +62,10 @@ pub fn post_markdown_raw(client: &mut Client, request_body: &MarkdownRequest, mi
         MarkdownRawMIME::TextXMarkdown => header.set(ContentType(Mime(TopLevel::Text, SubLevel::Ext("x-markdown".to_string()), vec![]))),
     }
 
-    Ok(try!(Client::response_to_string(&mut try!(client.post_body("/markdown/raw".to_string(), Some(header), body_data)))))
+    //Create body
+    let body_data = try!(serde_json::to_string(&request_body).map_err(error::Error::Parsing));
+
+    let mut response     = try!(client.post_body("/markdown/raw".to_string(), Some(header), body_data));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }

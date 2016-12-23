@@ -37,10 +37,9 @@ pub struct RateLimitElement {
 ////////////////////////////////////////////////////////////
 
 pub fn get_rate_limit(client: &mut Client) -> Result<RateLimit, error::Error> {
-    match serde_json::from_str(&try!(Client::response_to_string(&mut try!(client.get("/rate_limit".to_string(), None))))[..]) {
-        Ok(rate_limit) => Ok(rate_limit),
-        Err(err)       => Err(error::Error::Parsing(err))
-    }
+    let mut response     = try!(client.get("/rate_limit".to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
 
 //TODO: TESTS

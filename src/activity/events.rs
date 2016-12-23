@@ -60,10 +60,11 @@ pub struct Organization {
 //                       Functions                        //
 ////////////////////////////////////////////////////////////
 
+///Reference: https://developer.github.com/v3/activity/events/#list-public-events
 pub fn get_events(client: &mut Client) -> Result<Vec<Event>, error::Error> {
-    let mut response_events = try!(client.get("/events".to_string(), None));
-    let response_str = try!(Client::response_to_string(&mut response_events));
-    serde_json::from_str(& response_str[..]).map_err(error::Error::Parsing)
+    let mut response     = try!(client.get("/events".to_string(), None));
+    let     response_str = try!(Client::response_to_string(&mut response));
+    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
 
 
