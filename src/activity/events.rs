@@ -61,10 +61,9 @@ pub struct Organization {
 ////////////////////////////////////////////////////////////
 
 pub fn get_events(client: &mut Client) -> Result<Vec<Event>, error::Error> {
-    match serde_json::from_str(&try!(Client::response_to_string(&mut try!(client.get("/events".to_string(), None))))[..]) {
-        Ok(events) => Ok(events),
-        Err(err)   => Err(error::Error::Parsing(err))
-    }
+    let mut response_events = try!(client.get("/events".to_string(), None));
+    let response_str = try!(Client::response_to_string(&mut response_events));
+    serde_json::from_str(& response_str[..]).map_err(error::Error::Parsing)
 }
 
 
