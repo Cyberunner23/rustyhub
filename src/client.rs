@@ -25,7 +25,7 @@ use hyper::status::StatusCode;
 use error;
 
 /// The default API URL.
-static DEFAULT_API_URL: &'static str = "https://api.github.com";
+static DEFAULT_API_URL: &'static str = "https://api.github.com/";
 
 /// Struct with client state, values in this struct may be modified at any time,
 /// the new values will be used from the next API call
