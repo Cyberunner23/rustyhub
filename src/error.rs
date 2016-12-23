@@ -25,7 +25,7 @@ pub enum Error {
 pub struct GithubError {
     message:           String,
     documentation_url: Option<String>,
-    error:             Option<Vec<GithubErrorErrors>>
+    errors:            Option<Vec<GithubErrorErrors>>
 }
 
 #[derive(Debug, Deserialize)]
