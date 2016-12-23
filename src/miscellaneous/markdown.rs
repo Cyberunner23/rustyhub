@@ -5,7 +5,7 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-use hyper::header::{Accept, ContentType, Headers, qitem};
+use hyper::header::{Accept, ContentType, qitem};
 use hyper::mime::{Mime, TopLevel, SubLevel};
 use serde_json;
 
@@ -36,7 +36,7 @@ pub enum MarkdownRawMIME {
 ///Reference: https://developer.github.com/v3/markdown/#render-an-arbitrary-markdown-document
 pub fn post_markdown(client: &mut Client, request_body: &MarkdownRequest) -> Result<String, error::Error> {
 
-    //Set Content-Type
+    //Set Accept
     let mut header = client.get_default_header();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Html, vec![]))]));
@@ -69,3 +69,5 @@ pub fn post_markdown_raw(client: &mut Client, request_body: &MarkdownRequest, mi
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
+
+//TODO: TESTS
