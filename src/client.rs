@@ -141,15 +141,15 @@ impl Client {
 
     //HTTP Methods
     pub fn get(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(endpoint, header, Method::Get)
+        self.make_request(Method::Get, endpoint, header)
     }
 
     pub fn post(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(endpoint, header, Method::Post)
+        self.make_request(Method::Post, endpoint, header)
     }
 
 
-    fn make_request(&self, endpoint: String, header: Option<Headers>, method: Method) -> Result<Response, error::Error> {
+    fn make_request(&self, method: Method, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
         //if no headers use default
         let request_header = header.unwrap_or_else(|| self.get_default_header());
 
