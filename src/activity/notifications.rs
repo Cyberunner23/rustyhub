@@ -8,6 +8,7 @@
 use hyper::{Error as HyperError, Url};
 use serde_json;
 
+use activity::common::Subscription;
 use common::Repository;
 use client::Client;
 use error;
@@ -34,17 +35,6 @@ pub struct Subject {
     pub latest_comment_url: String,
     #[serde(rename = "type")]
     pub subject_type: String
-}
-
-///Response to subscription endpoints
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Subscription {
-    pub subscribed: bool,
-    pub ignored:    bool,
-    pub reason:     Option<String>,
-    pub created_at: String,
-    pub url:        String,
-    pub thread_url: String
 }
 
 

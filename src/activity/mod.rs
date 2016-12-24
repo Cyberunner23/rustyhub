@@ -8,9 +8,10 @@
 
 ///Reference: https://developer.github.com/v3/activity/
 
+pub mod common;
 pub mod events;
 pub mod feeds;
 pub mod notifications;
 pub mod starring;
-//TODO: Watching
+pub mod watching;
 //TODO: Payloads
