@@ -16,105 +16,105 @@ use error;
 ///Response to /notifications
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Notification {
-    id:           String,
-    repository:   Repository,
-    subject:      Subject,
-    reason:       String,
-    unread:       bool,
-    updated_at:   String,
-    last_read_at: Option<String>,
-    url:          String
+    pub id:           String,
+    pub repository:   Repository,
+    pub subject:      Subject,
+    pub reason:       String,
+    pub unread:       bool,
+    pub updated_at:   String,
+    pub last_read_at: Option<String>,
+    pub url:          String
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Subject {
-    title: String,
-    url:   String,
-    latest_comment_url: String,
+    pub title: String,
+    pub url:   String,
+    pub latest_comment_url: String,
     #[serde(rename = "type")]
-    subject_type: String
+    pub subject_type: String
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Repository {
-    id:                u64,
-    name:              String,
-    full_name:         String,
-    owner:             Owner,
-    description:       String,
-    private:           bool,
-    fork:              bool,
-    url:               String,
-    html_url:          String,
-    forks_url:         Option<String>,
-    keys_url:          Option<String>,
-    collaborators_url: Option<String>,
-    teams_url:         Option<String>,
-    hooks_url:         Option<String>,
-    issue_events_url:  Option<String>,
-    events_url:        Option<String>,
-    assignees_url:     Option<String>,
-    branches_url:      Option<String>,
-    tags_url:          Option<String>,
-    blobs_url:         Option<String>,
-    git_tags_url:      Option<String>,
-    git_refs_url:      Option<String>,
-    trees_url:         Option<String>,
-    statuses_url:      Option<String>,
-    languages_url:     Option<String>,
-    stargazers_url:    Option<String>,
-    contributors_url:  Option<String>,
-    subscribers_url:   Option<String>,
-    subscription_url:  Option<String>,
-    commits_url:       Option<String>,
-    git_commits_url:   Option<String>,
-    comments_url:      Option<String>,
-    issue_comment_url: Option<String>,
-    contents_url:      Option<String>,
-    compare_url:       Option<String>,
-    merges_url:        Option<String>,
-    archive_url:       Option<String>,
-    downloads_url:     Option<String>,
-    issues_url:        Option<String>,
-    pulls_url:         Option<String>,
-    milestones_url:    Option<String>,
-    notifications_url: Option<String>,
-    labels_url:        Option<String>,
-    releases_url:      Option<String>,
-    deployments_url:   Option<String>
+    pub id:                u64,
+    pub name:              String,
+    pub full_name:         String,
+    pub owner:             Owner,
+    pub description:       String,
+    pub private:           bool,
+    pub fork:              bool,
+    pub url:               String,
+    pub html_url:          String,
+    pub forks_url:         Option<String>,
+    pub keys_url:          Option<String>,
+    pub collaborators_url: Option<String>,
+    pub teams_url:         Option<String>,
+    pub hooks_url:         Option<String>,
+    pub issue_events_url:  Option<String>,
+    pub events_url:        Option<String>,
+    pub assignees_url:     Option<String>,
+    pub branches_url:      Option<String>,
+    pub tags_url:          Option<String>,
+    pub blobs_url:         Option<String>,
+    pub git_tags_url:      Option<String>,
+    pub git_refs_url:      Option<String>,
+    pub trees_url:         Option<String>,
+    pub statuses_url:      Option<String>,
+    pub languages_url:     Option<String>,
+    pub stargazers_url:    Option<String>,
+    pub contributors_url:  Option<String>,
+    pub subscribers_url:   Option<String>,
+    pub subscription_url:  Option<String>,
+    pub commits_url:       Option<String>,
+    pub git_commits_url:   Option<String>,
+    pub comments_url:      Option<String>,
+    pub issue_comment_url: Option<String>,
+    pub contents_url:      Option<String>,
+    pub compare_url:       Option<String>,
+    pub merges_url:        Option<String>,
+    pub archive_url:       Option<String>,
+    pub downloads_url:     Option<String>,
+    pub issues_url:        Option<String>,
+    pub pulls_url:         Option<String>,
+    pub milestones_url:    Option<String>,
+    pub notifications_url: Option<String>,
+    pub labels_url:        Option<String>,
+    pub releases_url:      Option<String>,
+    pub deployments_url:   Option<String>
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Owner {
-    login:               String,
-    id:                  u64,
-    avatar_url:          String,
-    gravatar_id:         String,
-    url:                 String,
-    html_url:            String,
-    followers_url:       String,
-    following_url:       String,
-    gists_url:           String,
-    starred_url:         String,
-    subscriptions_url:   String,
-    organizations_url:   String,
-    repos_url:           String,
-    events_url:          String,
-    received_events_url: String,
+    pub login:               String,
+    pub id:                  u64,
+    pub avatar_url:          String,
+    pub gravatar_id:         String,
+    pub url:                 String,
+    pub html_url:            String,
+    pub followers_url:       String,
+    pub following_url:       String,
+    pub gists_url:           String,
+    pub starred_url:         String,
+    pub subscriptions_url:   String,
+    pub organizations_url:   String,
+    pub repos_url:           String,
+    pub events_url:          String,
+    pub received_events_url: String,
     #[serde(rename = "type")]
-    user_type:           String,
-    site_admin:          bool
+    pub user_type:           String,
+    pub site_admin:          bool
 }
 
 ///Response to subscription endpoints
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Subscription {
-    subscribed: bool,
-    ignored:    bool,
+    pub subscribed: bool,
+    pub ignored:    bool,
     //reason:   null (seems to always be null)
-    created_at: String,
-    url:        String,
-    thread_url: String
+    pub created_at: String,
+    pub url:        String,
+    pub thread_url: String
 }
 
 

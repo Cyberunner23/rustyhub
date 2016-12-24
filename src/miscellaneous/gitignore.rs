@@ -16,8 +16,8 @@ use error;
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct GitignoreTemplate {
-    name:   String,
-    source: String
+    pub name:   String,
+    pub source: String
 }
 
 ////////////////////////////////////////////////////////////

@@ -15,21 +15,21 @@ use error;
 /// The response to GET /rate_limit
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct RateLimit {
-    resources: RateLimitResources
+    pub resources: RateLimitResources
     //rate omitted since it is deprecated and will ne removed in the next version of the API
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct RateLimitResources {
-    core:   RateLimitElement,
-    search: RateLimitElement
+    pub core:   RateLimitElement,
+    pub search: RateLimitElement
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct RateLimitElement {
-    limit:     u64,
-    remaining: u64,
-    reset:     u64
+    pub limit:     u64,
+    pub remaining: u64,
+    pub reset:     u64
 }
 
 ////////////////////////////////////////////////////////////

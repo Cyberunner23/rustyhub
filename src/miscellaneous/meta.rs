@@ -14,11 +14,11 @@ use error;
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Meta {
-    verifiable_password_authentication: bool,
-    github_services_sha: String,
-    hooks:    Vec<String>,
-    pages:    Vec<String>,
-    importer: Vec<String>,
+    pub verifiable_password_authentication: bool,
+    pub github_services_sha: String,
+    pub hooks:    Vec<String>,
+    pub pages:    Vec<String>,
+    pub importer: Vec<String>,
 }
 
 ////////////////////////////////////////////////////////////

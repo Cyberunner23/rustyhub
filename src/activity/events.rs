@@ -20,39 +20,39 @@ use error;
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Event {
     #[serde(rename = "type")]
-    event_type: String,
-    public:     bool,
-    payload:    BTreeMap<String, Value>,
-    repo:       Repository,
-    actor:      Actor,
-    org:        Organization,
-    created_at: String,
-    id:         u64
+    pub event_type: String,
+    pub public:     bool,
+    pub payload:    BTreeMap<String, Value>,
+    pub repo:       Repository,
+    pub actor:      Actor,
+    pub org:        Organization,
+    pub created_at: String,
+    pub id:         u64
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Repository {
-    id:   u64,
-    name: String,
-    url:  String
+    pub id:   u64,
+    pub name: String,
+    pub url:  String
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Actor {
-    id:          u64,
-    login:       String,
-    gravatar_id: String,
-    avatar_url:  String,
-    url:         String
+    pub id:          u64,
+    pub login:       String,
+    pub gravatar_id: String,
+    pub avatar_url:  String,
+    pub url:         String
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Organization {
-    id:          u64,
-    login:       String,
-    gravatar_id: String,
-    avatar_url:  String,
-    url:         String,
+    pub id:          u64,
+    pub login:       String,
+    pub gravatar_id: String,
+    pub avatar_url:  String,
+    pub url:         String,
 }
 
 

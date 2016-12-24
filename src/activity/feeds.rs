@@ -15,33 +15,33 @@ use error;
 ///Response to feeds requests
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Feeds {
-    timeline_url:                   String,
-    user_url:                       String,
-    current_user_public_ur:         Option<String>,
-    current_user_url:               Option<String>,
-    current_user_actor_url:         Option<String>,
-    current_user_organization_url:  Option<String>,
-    current_user_organization_urls: Option<Vec<String>>,
+    pub timeline_url:                   String,
+    pub user_url:                       String,
+    pub current_user_public_ur:         Option<String>,
+    pub current_user_url:               Option<String>,
+    pub current_user_actor_url:         Option<String>,
+    pub current_user_organization_url:  Option<String>,
+    pub current_user_organization_urls: Option<Vec<String>>,
     #[serde(rename = "_links")]
-    links: Links
+    pub links: Links
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Links {
-    timeline:                   FeedsElem,
-    user:                       FeedsElem,
-    current_user_public:        Option<FeedsElem>,
-    current_user:               Option<FeedsElem>,
-    current_user_actor:         Option<FeedsElem>,
-    current_user_organization:  Option<FeedsElem>,
-    current_user_organizations: Option<FeedsElem>,
+    pub timeline:                   FeedsElem,
+    pub user:                       FeedsElem,
+    pub current_user_public:        Option<FeedsElem>,
+    pub current_user:               Option<FeedsElem>,
+    pub current_user_actor:         Option<FeedsElem>,
+    pub current_user_organization:  Option<FeedsElem>,
+    pub current_user_organizations: Option<FeedsElem>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct FeedsElem {
-    href: String,
+    pub href: String,
     #[serde(rename = "type")]
-    mime_type: String
+    pub mime_type: String
 }
 
 

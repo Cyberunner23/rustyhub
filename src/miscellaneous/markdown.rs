@@ -16,11 +16,11 @@ use error;
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
 pub struct MarkdownRequest {
-    text:    String,
+    pub text:    String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    mode:    Option<String>,
+    pub mode:    Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    context: Option<String>
+    pub context: Option<String>
 }
 
 pub enum MarkdownRawMIME {

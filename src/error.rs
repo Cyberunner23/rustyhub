@@ -9,6 +9,7 @@
 use std::io::Error as IOError;
 
 /// Represents all possible errors than can occur while using rustyhub.
+#[derive(Debug)]
 pub enum Error {
 
     /// Error returned by github for invalid API usage.
