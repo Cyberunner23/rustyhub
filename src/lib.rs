@@ -7,6 +7,7 @@
 // copied, modified, or distributed except according to those terms.
 
 #![feature(proc_macro)]
+//#![warn(missing_docs)]
 
 extern crate hyper;
 #[macro_use]
