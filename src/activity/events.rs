@@ -25,7 +25,7 @@ pub struct Event {
     pub payload:    BTreeMap<String, Value>,
     pub repo:       Repository,
     pub actor:      Actor,
-    pub org:        Organization,
+    pub org:        Option<Organization>,
     pub created_at: String,
     pub id:         u64
 }
