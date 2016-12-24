@@ -41,7 +41,7 @@ pub struct Subject {
 pub struct Subscription {
     pub subscribed: bool,
     pub ignored:    bool,
-    reason:         Option<String>,
+    pub reason:     Option<String>,
     pub created_at: String,
     pub url:        String,
     pub thread_url: String
