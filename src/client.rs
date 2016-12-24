@@ -90,7 +90,8 @@ impl Client {
     fn get_error(response: &mut Response) -> Option<error::Error> {
         match response.status {
             StatusCode::BadRequest  |
-            StatusCode::UnprocessableEntity => {
+            StatusCode::UnprocessableEntity |
+            StatusCode::NotFound => {
                 let body_data = match Client::response_to_string(response) {
                     Ok(data) => data,
                     Err(err) => return Some(err)
