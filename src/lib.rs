@@ -18,6 +18,7 @@ extern crate serde_json;
 
 pub mod activity;
 pub mod client;
+pub mod common;
 pub mod error;
 pub mod miscellaneous;
 pub mod utils;

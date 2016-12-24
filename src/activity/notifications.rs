@@ -8,6 +8,7 @@
 use hyper::{Error as HyperError, Url};
 use serde_json;
 
+use common::Repository;
 use client::Client;
 use error;
 
@@ -19,7 +20,7 @@ pub struct Notification {
     pub id:           String,
     pub repository:   Repository,
     pub subject:      Subject,
-    pub reason:       String,
+    pub reason:       Option<String>,
     pub unread:       bool,
     pub updated_at:   String,
     pub last_read_at: Option<String>,
@@ -35,83 +36,12 @@ pub struct Subject {
     pub subject_type: String
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Repository {
-    pub id:                u64,
-    pub name:              String,
-    pub full_name:         String,
-    pub owner:             Owner,
-    pub description:       String,
-    pub private:           bool,
-    pub fork:              bool,
-    pub url:               String,
-    pub html_url:          String,
-    pub forks_url:         Option<String>,
-    pub keys_url:          Option<String>,
-    pub collaborators_url: Option<String>,
-    pub teams_url:         Option<String>,
-    pub hooks_url:         Option<String>,
-    pub issue_events_url:  Option<String>,
-    pub events_url:        Option<String>,
-    pub assignees_url:     Option<String>,
-    pub branches_url:      Option<String>,
-    pub tags_url:          Option<String>,
-    pub blobs_url:         Option<String>,
-    pub git_tags_url:      Option<String>,
-    pub git_refs_url:      Option<String>,
-    pub trees_url:         Option<String>,
-    pub statuses_url:      Option<String>,
-    pub languages_url:     Option<String>,
-    pub stargazers_url:    Option<String>,
-    pub contributors_url:  Option<String>,
-    pub subscribers_url:   Option<String>,
-    pub subscription_url:  Option<String>,
-    pub commits_url:       Option<String>,
-    pub git_commits_url:   Option<String>,
-    pub comments_url:      Option<String>,
-    pub issue_comment_url: Option<String>,
-    pub contents_url:      Option<String>,
-    pub compare_url:       Option<String>,
-    pub merges_url:        Option<String>,
-    pub archive_url:       Option<String>,
-    pub downloads_url:     Option<String>,
-    pub issues_url:        Option<String>,
-    pub pulls_url:         Option<String>,
-    pub milestones_url:    Option<String>,
-    pub notifications_url: Option<String>,
-    pub labels_url:        Option<String>,
-    pub releases_url:      Option<String>,
-    pub deployments_url:   Option<String>
-}
-
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Owner {
-    pub login:               String,
-    pub id:                  u64,
-    pub avatar_url:          String,
-    pub gravatar_id:         String,
-    pub url:                 String,
-    pub html_url:            String,
-    pub followers_url:       String,
-    pub following_url:       String,
-    pub gists_url:           String,
-    pub starred_url:         String,
-    pub subscriptions_url:   String,
-    pub organizations_url:   String,
-    pub repos_url:           String,
-    pub events_url:          String,
-    pub received_events_url: String,
-    #[serde(rename = "type")]
-    pub user_type:           String,
-    pub site_admin:          bool
-}
-
 ///Response to subscription endpoints
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Subscription {
     pub subscribed: bool,
     pub ignored:    bool,
-    //reason:   null (seems to always be null)
+    reason:         Option<String>,
     pub created_at: String,
     pub url:        String,
     pub thread_url: String

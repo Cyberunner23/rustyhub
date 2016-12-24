@@ -10,6 +10,7 @@ use std::collections::BTreeMap;
 use serde_json;
 use serde_json::Value;
 
+use common::{Repository, User};
 use client::Client;
 use error;
 
@@ -24,26 +25,10 @@ pub struct Event {
     pub public:     bool,
     pub payload:    BTreeMap<String, Value>,
     pub repo:       Repository,
-    pub actor:      Actor,
+    pub actor:      User,
     pub org:        Option<Organization>,
     pub created_at: String,
     pub id:         u64
-}
-
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Repository {
-    pub id:   u64,
-    pub name: String,
-    pub url:  String
-}
-
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Actor {
-    pub id:          u64,
-    pub login:       String,
-    pub gravatar_id: String,
-    pub avatar_url:  String,
-    pub url:         String
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
