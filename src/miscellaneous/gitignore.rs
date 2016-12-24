@@ -40,7 +40,7 @@ pub fn get_gitignore_templates_name(client: &mut Client, name: &String) -> Resul
 
 pub fn get_gitignore_templates_name_raw(client: &mut Client, name: &String) -> Result<String, error::Error> {
 
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.raw".to_string()), vec![]))]));
 

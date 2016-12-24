@@ -34,6 +34,7 @@ static DEFAULT_API_URL: &'static str = "https://api.github.com";
 #[derive(Debug)]
 pub struct Client {
 
+    /// Internal http client.
     pub http_client: HyperClient,
     /// Base URL to the API, can be modified to use the enterprise API.
     pub api_url:     String,
@@ -51,7 +52,7 @@ impl Client {
         Client::with_url(DEFAULT_API_URL, user_agent, token)
     }
 
-    /// Creates a Client state an API URL other than the default
+    /// Creates a Client state an API URL other than the default.
     pub fn with_url(url: &str, user_agent: &str, token: Option<String>) -> Client {
         Client {
             http_client: HyperClient::new(),
@@ -61,13 +62,13 @@ impl Client {
         }
     }
 
-    /// Returns the default header used
-    pub fn get_default_header(&self) -> Headers {
-        let mut header = Headers::new();
-        header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3+json".to_string()), vec![]))])); //"application/vnd.github.v3+json"
-        header.set(UserAgent(self.user_agent[..].to_owned()));
-        if let Some(ref auth) = self.auth_token {header.set(Authorization(Bearer{token: auth[..].to_owned()}))}
-        return header;
+    /// Returns the default headers used throughout the crate.
+    pub fn get_default_headers(&self) -> Headers {
+        let mut headers = Headers::new();
+        headers.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3+json".to_string()), vec![]))])); //"application/vnd.github.v3+json"
+        headers.set(UserAgent(self.user_agent[..].to_owned()));
+        if let Some(ref auth) = self.auth_token {headers.set(Authorization(Bearer{token: auth[..].to_owned()}))}
+        return headers;
     }
 
     //Utils
@@ -106,6 +107,7 @@ impl Client {
         }
     }
 
+    ///Utility to extract the body of an API response.
     pub fn response_to_string(response: &mut Response) -> Result<String, error::Error> {
         let mut body_data = String::new();
         response.read_to_string(&mut body_data)
@@ -141,9 +143,9 @@ impl Client {
     }*/
 
 
-    fn make_request(&self, method: Method, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+    fn make_request(&self, method: Method, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
         //if no headers use default
-        let request_header = header.unwrap_or_else(|| self.get_default_header());
+        let request_header = headers.unwrap_or_else(|| self.get_default_headers());
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
@@ -171,10 +173,10 @@ impl Client {
     fn make_request_body(&self,
                          method: Method,
                          endpoint: String,
-                         header: Option<Headers>,
+                         headers: Option<Headers>,
                          body: String) -> Result<Response, error::Error> {
         //if no headers use default
-        let request_header = header.unwrap_or_else(|| self.get_default_header());
+        let request_header = headers.unwrap_or_else(|| self.get_default_headers());
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
@@ -205,50 +207,55 @@ impl Client {
 
 
     //HTTP Methods
-    pub fn get(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Get, endpoint, header)
+    ///GET request with optionally overridden headers.
+    pub fn get(&self, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Get, endpoint, headers)
     }
 
-    pub fn post(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Post, endpoint, header)
+    ///POST request with optionally overridden headers.
+    pub fn post(&self, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Post, endpoint, headers)
     }
 
-    pub fn put(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Put, endpoint, header)
+    ///PUT request with optionally overridden headers.
+    pub fn put(&self, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Put, endpoint, headers)
     }
 
-    pub fn patch(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Patch, endpoint, header)
+    ///PATCH request with optionally overridden headers.
+    pub fn patch(&self, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Patch, endpoint, headers)
     }
 
-    pub fn delete(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Delete, endpoint, header)
+    ///DELETE request with optionally overridden headers.
+    pub fn delete(&self, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Delete, endpoint, headers)
     }
 
 
-    //GET with a body
-    pub fn get_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-        self.make_request_body(Method::Get, endpoint, header, body)
+    ///GET request with optionally overridden headers and a body.
+    pub fn get_body(&self, endpoint: String, headers: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Get, endpoint, headers, body)
     }
 
-    //POST with a body
-    pub fn post_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-        self.make_request_body(Method::Post, endpoint, header, body)
+    ///POST request with optionally overridden headers and a body.
+    pub fn post_body(&self, endpoint: String, headers: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Post, endpoint, headers, body)
     }
 
-    //PUT with a body
-    pub fn put_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-        self.make_request_body(Method::Put, endpoint, header, body)
+    ///PUT request with optionally overridden headers and a body.
+    pub fn put_body(&self, endpoint: String, headers: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Put, endpoint, headers, body)
     }
 
-    //PATCH with a body
-    pub fn patch_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-        self.make_request_body(Method::Patch, endpoint, header, body)
+    ///PATCH request with optionally overridden headers and a body.
+    pub fn patch_body(&self, endpoint: String, headers: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Patch, endpoint, headers, body)
     }
 
-    //DELETE with a body
-    pub fn delete_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
-        self.make_request_body(Method::Delete, endpoint, header, body)
+    ///DELETE request with optionally overridden headers and a body.
+    pub fn delete_body(&self, endpoint: String, headers: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Delete, endpoint, headers, body)
     }
 }
 

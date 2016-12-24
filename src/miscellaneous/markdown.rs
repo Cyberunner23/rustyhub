@@ -37,7 +37,7 @@ pub enum MarkdownRawMIME {
 pub fn post_markdown(client: &mut Client, request_body: &MarkdownRequest) -> Result<String, error::Error> {
 
     //Set Accept
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Html, vec![]))]));
 
@@ -53,7 +53,7 @@ pub fn post_markdown(client: &mut Client, request_body: &MarkdownRequest) -> Res
 pub fn post_markdown_raw(client: &mut Client, request_body: &MarkdownRequest, mime: MarkdownRawMIME) -> Result<String, error::Error> {
 
     //Edit Accept and set Content-Type
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Html, vec![]))]));
 

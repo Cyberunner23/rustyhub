@@ -54,7 +54,7 @@ pub fn get_repos_owner_repo_stargazers(client: &mut Client, owner: String, repo:
 ///Timestamp variant
 pub fn get_repos_owner_repo_stargazers_timestamp(client: &mut Client, owner: String, repo: String) -> Result<Vec<ListStarTimeStamp>, error::Error> {
 
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
@@ -167,7 +167,7 @@ pub fn get_users_username_starred_timestamp(client: &mut Client, username: Strin
 
     }
 
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
@@ -207,7 +207,7 @@ pub fn get_users_starred_timestamp(client: &mut Client, sort: Option<Sort>, dire
 
     }
 
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
@@ -227,7 +227,7 @@ pub fn get_user_starred_owner_repo(client: &mut Client, owner: String, repo: Str
 ///Reference: https://developer.github.com/v3/activity/starring/#star-a-repository
 pub fn put_user_starred_owner_repo(client: &mut Client, owner: String, repo: String) -> Result<(), error::Error> {
 
-    let mut header = client.get_default_header();
+    let mut header = client.get_default_headers();
     header.set(ContentLength(0u64));
 
     match client.get(format!("/user/starred/{}/{}", owner, repo), Some(header)) {
