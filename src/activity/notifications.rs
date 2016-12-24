@@ -76,7 +76,7 @@ pub fn get_notifications(client: &mut Client,
         }
     }
 
-    let mut response     = try!(client.get(url.as_str().to_string(), None));
+    let mut response     = try!(client.get(format!("/notifications?{}", url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
@@ -117,7 +117,7 @@ pub fn get_repos_owner_repo_notifications(client: &mut Client,
         }
     }
 
-    let mut response     = try!(client.get(url.as_str().to_string(), None));
+    let mut response     = try!(client.get(format!("/repos/{}/{}/notifications?{}", owner, repo, url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }
@@ -137,7 +137,7 @@ pub fn put_notifications(client: &mut Client, last_read_at: String) -> Result<()
         query_pairs.append_pair("last_read_at", &last_read_at[..]);
     }
 
-    match client.put(url.as_str().to_string(), None) {
+    match client.put(format!("/notifications?{}", url.query().unwrap()), None) {
         Ok(_)    => Ok(()),
         Err(err) => Err(err)
     }
@@ -158,7 +158,7 @@ pub fn put_repos_owner_repo_notifications(client: &mut Client, owner: String, re
         query_pairs.append_pair("last_read_at", &last_read_at[..]);
     }
 
-    match client.put(url.as_str().to_string(), None) {
+    match client.put(format!("/repos/{}/{}notifications?{}", owner, repo, url.query().unwrap()), None) {
         Ok(_)    => Ok(()),
         Err(err) => Err(err)
     }
@@ -202,7 +202,7 @@ pub fn put_notifications_threads_id_subscription(client: &mut Client, id: String
         query_pairs.append_pair("ignored",    &format!("{}", ignored)[..]);
     }
 
-    let mut response     = try!(client.put(url.as_str().to_string(), None));
+    let mut response     = try!(client.put(format!("/notifications/threads/{}/subscription?{}", id, url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }

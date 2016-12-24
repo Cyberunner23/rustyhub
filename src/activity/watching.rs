@@ -59,7 +59,7 @@ pub fn put_repos_owner_repo_subscription(client: &mut Client, owner: String, rep
         query_pairs.append_pair("ignored",    &format!("{}", ignored)[..]);
     }
 
-    let mut response     = try!(client.put(url.as_str().to_string(), None));
+    let mut response     = try!(client.put(format!("/repos/{}/{}/subscription?{}", owner, repo, url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 }

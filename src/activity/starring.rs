@@ -94,7 +94,7 @@ pub fn get_users_username_starred(client: &mut Client, username: String, sort: O
 
     }
 
-    let mut response     = try!(client.get(url.as_str().to_string(), None));
+    let mut response     = try!(client.get(format!("/users/{}/starred?{}", username, url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 
@@ -130,7 +130,7 @@ pub fn get_users_starred(client: &mut Client, sort: Option<Sort>, direction: Opt
 
     }
 
-    let mut response     = try!(client.get(url.as_str().to_string(), None));
+    let mut response     = try!(client.get(format!("/users/starred?{}", url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 
@@ -171,7 +171,7 @@ pub fn get_users_username_starred_timestamp(client: &mut Client, username: Strin
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    let mut response     = try!(client.get(url.as_str().to_string(), Some(header)));
+    let mut response     = try!(client.get(format!("/users/{}/starred?{}", username, url.query().unwrap()), Some(header)));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 
@@ -211,7 +211,7 @@ pub fn get_users_starred_timestamp(client: &mut Client, sort: Option<Sort>, dire
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    let mut response     = try!(client.get(url.as_str().to_string(), Some(header)));
+    let mut response     = try!(client.get(format!("/user/starred?{}", url.query().unwrap()), Some(header)));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
 
