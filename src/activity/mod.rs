@@ -10,3 +10,4 @@
 
 pub mod events;
 pub mod feeds;
+pub mod notifications;

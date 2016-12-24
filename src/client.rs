@@ -139,15 +139,6 @@ impl Client {
         }
     }*/
 
-    //HTTP Methods
-    pub fn get(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Get, endpoint, header)
-    }
-
-    pub fn post(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
-        self.make_request(Method::Post, endpoint, header)
-    }
-
 
     fn make_request(&self, method: Method, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
         //if no headers use default
@@ -156,16 +147,16 @@ impl Client {
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
         let mut response = try!(self.http_client.request(method, &format!("{}{}", self.api_url, endpoint)[..])
-                                                .headers(request_header)
-                                                .send()
-                                                .map_err(error::Error::HTTP));
+            .headers(request_header)
+            .send()
+            .map_err(error::Error::HTTP));
 
         //Handle redirects
         while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
             response = try!(self.http_client.get(&loc[..])
-                                            .headers(request_header_copy.clone())
-                                            .send()
-                                            .map_err(error::Error::HTTP));
+                .headers(request_header_copy.clone())
+                .send()
+                .map_err(error::Error::HTTP));
         }
 
         //Handle error
@@ -189,18 +180,18 @@ impl Client {
         let     body_len  = body.clone().len();
         let     body_copy = body.clone();
         let mut response  = try!(self.http_client.request(method.clone(), &format!("{}{}", self.api_url, endpoint)[..])
-                                                 .headers(request_header)
-                                                 .body(Body::BufBody(&body.into_bytes()[..], body_len))
-                                                 .send()
-                                                 .map_err(error::Error::HTTP));
+            .headers(request_header)
+            .body(Body::BufBody(&body.into_bytes()[..], body_len))
+            .send()
+            .map_err(error::Error::HTTP));
 
         //Handle redirects
         while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
             response = try!(self.http_client.request(method.clone(), &loc[..])
-                                            .headers(request_header_copy.clone())
-                                            .body(Body::BufBody(&body_copy.clone().into_bytes()[..], body_len))
-                                            .send()
-                                            .map_err(error::Error::HTTP));
+                .headers(request_header_copy.clone())
+                .body(Body::BufBody(&body_copy.clone().into_bytes()[..], body_len))
+                .send()
+                .map_err(error::Error::HTTP));
         }
 
         //Handle error
@@ -211,15 +202,52 @@ impl Client {
         Ok(response)
     }
 
+
+    //HTTP Methods
+    pub fn get(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Get, endpoint, header)
+    }
+
+    pub fn post(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Post, endpoint, header)
+    }
+
+    pub fn put(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Put, endpoint, header)
+    }
+
+    pub fn patch(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Patch, endpoint, header)
+    }
+
+    pub fn delete(&self, endpoint: String, header: Option<Headers>) -> Result<Response, error::Error> {
+        self.make_request(Method::Delete, endpoint, header)
+    }
+
+
     //GET with a body
     pub fn get_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
         self.make_request_body(Method::Get, endpoint, header, body)
     }
 
-
     //POST with a body
     pub fn post_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
         self.make_request_body(Method::Post, endpoint, header, body)
+    }
+
+    //PUT with a body
+    pub fn put_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Put, endpoint, header, body)
+    }
+
+    //PATCH with a body
+    pub fn patch_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Patch, endpoint, header, body)
+    }
+
+    //DELETE with a body
+    pub fn delete_body(&self, endpoint: String, header: Option<Headers>, body: String) -> Result<Response, error::Error> {
+        self.make_request_body(Method::Delete, endpoint, header, body)
     }
 }
 
