@@ -16,9 +16,25 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
+//TODO: Payloads
 pub mod activity;
+//TODO: Licenses once out of preview
+pub mod miscellaneous;
+//TODO: enterprise
+//TODO: gists
+//TODO: git_data
+//TODO: integrations
+//TODO: migration
+//TODO: organizations
+//TODO: projects
+//TODO: pull_requests
+//TODO: reactions
+//TODO: repositories
+//TODO: search
+//TODO: users
+//TODO: webhooks, include HMAC validation?
+
 pub mod client;
 pub mod common;
 pub mod error;
-pub mod miscellaneous;
 pub mod utils;
