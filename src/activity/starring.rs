@@ -5,6 +5,13 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+//! # Starred
+//!
+//! These are the responses and API call functions related
+//! to the starred endpoints of the API.
+//!
+//! Reference: https://developer.github.com/v3/activity/starring/
+
 use hyper::{Error as HyperError, Url};
 use hyper::header::{Accept, ContentLength, qitem};
 use hyper::mime::{Mime, TopLevel, SubLevel};
@@ -13,8 +20,6 @@ use common::{Repository, User};
 use client::Client;
 use error;
 use utils;
-
-///Reference: https://developer.github.com/v3/activity/starring/
 
 ///Response returned by the timestamp variant of list stargazers
 #[derive(Clone, Debug, Deserialize, PartialEq)]
@@ -41,191 +46,297 @@ pub enum Direction {
 
 
 ////////////////////////////////////////////////////////////
-//                       Functions                        //
+//                    Extension Trait                     //
 ////////////////////////////////////////////////////////////
 
-///Reference: https://developer.github.com/v3/activity/starring/#list-stargazers
-pub fn get_repos_owner_repo_stargazers(client: &mut Client, owner: String, repo: String) -> Result<Vec<User>, error::Error> {
-    utils::request_endpoint(client, format!("/repos/{}/{}/stargazers", owner, repo))
+pub trait StarringExt {
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#list-stargazers)\]
+    /// Returns the list of stargazers.
+    /// ## Endpoint:
+    /// GET /repos/:owner/:repo/stargazers
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    fn get_repos_owner_repo_stargazers(&mut self, owner: String, repo: String) -> Result<Vec<User>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#list-stargazers)\]
+    /// Returns the list of stargazers with timestamp.
+    /// ## Endpoint:
+    /// GET /repos/:owner/:repo/stargazers
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    fn get_repos_owner_repo_stargazers_timestamp(&mut self, owner: String, repo: String) -> Result<Vec<ListStarTimeStamp>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#list-repositories-being-starred)\]
+    /// Returns the list of repositories being starred by
+    /// a user.
+    /// ## Endpoint:
+    /// GET /users/:username/starred
+    /// ## Parameters:
+    /// * `username`: Name of the user.
+    /// * `sort`: Default: `Sort::Created`, sort by when the
+    /// repository was starred (`Sort::Created`) or by when
+    /// the repository was last pushed to (`Sort::Updated`).
+    /// * `direction`: Default: `Direction::Ascending`, sort
+    /// in ascending (`Direction::Ascending`) or in
+    /// descending (`Direction::Descending`) order.
+    fn get_users_username_starred(&mut self, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#list-repositories-being-starred)\]
+    /// Returns the list of repositories with timestamp
+    /// being starred by a user.
+    /// ## Endpoint:
+    /// GET /users/:username/starred
+    /// ## Parameters:
+    /// * `username`: Name of the user.
+    /// * `sort`: Default: `Sort::Created`, sort by when the
+    /// repository was starred (`Sort::Created`) or by when
+    /// the repository was last pushed to (`Sort::Updated`).
+    /// * `direction`: Default: `Direction::Ascending`, sort
+    /// in ascending (`Direction::Ascending`) or in
+    /// descending (`Direction::Descending`) order.
+    fn get_users_username_starred_timestamp(&mut self, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#list-repositories-being-starred)\]
+    /// Returns the list of repositories being starred by
+    /// an authenticated user.
+    /// ## Endpoint:
+    /// GET /user/starred
+    /// ## Parameters:
+    /// * `sort`: Default: `Sort::Created`, sort by when the
+    /// repository was starred (`Sort::Created`) or by when
+    /// the repository was last pushed to (`Sort::Updated`).
+    /// * `direction`: Default: `Direction::Ascending`, sort
+    /// in ascending (`Direction::Ascending`) or in
+    /// descending (`Direction::Descending`) order.
+    fn get_user_starred(&mut self, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#list-repositories-being-starred)\]
+    /// Returns the list of repositories with timestamp
+    /// being starred by an authenticated user.
+    /// ## Endpoint:
+    /// GET /user/starred
+    /// ## Parameters:
+    /// * `sort`: Default: `Sort::Created`, sort by when the
+    /// repository was starred (`Sort::Created`) or by when
+    /// the repository was last pushed to (`Sort::Updated`).
+    /// * `direction`: Default: `Direction::Ascending`, sort
+    /// in ascending (`Direction::Ascending`) or in
+    /// descending (`Direction::Descending`) order.
+    fn get_user_starred_timestamp(&mut self, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#check-if-you-are-starring-a-repository)\]
+    /// Returns whether an authenticated user is starring a
+    /// repository.
+    /// ## Endpoint:
+    /// GET /user/starred/:owner/:repo
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    /// ## Return Values:
+    /// * If repository is starred: returns Ok(())
+    /// * If repository is not starred: returns Error::Github
+    fn get_user_starred_owner_repo(&mut self, owner: String, repo: String) -> Result<(), error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#star-a-repository)\]
+    /// Stars a repository.
+    /// ## Endpoint:
+    /// PUT /user/starred/:owner/:repo
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    fn put_user_starred_owner_repo(&mut self, owner: String, repo: String) -> Result<(), error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/starring/#unstar-a-repository)\]
+    /// Unstars a repository.
+    /// ## Endpoint:
+    /// DELETE /user/starred/:owner/:repo
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    fn delete_user_starred_owner_repo(&mut self, owner: String, repo: String) -> Result<(), error::Error>;
 }
 
-///Timestamp variant
-pub fn get_repos_owner_repo_stargazers_timestamp(client: &mut Client, owner: String, repo: String) -> Result<Vec<ListStarTimeStamp>, error::Error> {
+impl StarringExt for Client {
 
-    let mut header = client.get_default_headers();
-    header.remove::<Accept>();
-    header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
+    fn get_repos_owner_repo_stargazers(&mut self, owner: String, repo: String) -> Result<Vec<User>, error::Error> {
+        utils::request_endpoint(self, format!("/repos/{}/{}/stargazers", owner, repo))
+    }
 
-    utils::request_endpoint_with_headers(client, format!("/repos/{}/{}/stargazers", owner, repo), Some(header))
-}
+    fn get_repos_owner_repo_stargazers_timestamp(&mut self, owner: String, repo: String) -> Result<Vec<ListStarTimeStamp>, error::Error> {
 
-///Reference: https://developer.github.com/v3/activity/starring/#list-repositories-being-starred
-pub fn get_users_username_starred(client: &mut Client, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
+        let mut header = self.get_default_headers();
+        header.remove::<Accept>();
+        header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    let mut url = match Url::parse(&format!("{}/users/{}/starred", client.api_url, username)[..]) {
-        Ok(url)  => url,
-        Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
-    };
+        utils::request_endpoint_with_headers(self, format!("/repos/{}/{}/stargazers", owner, repo), Some(header))
+    }
 
-    //Limits the scope of the mutable borrow
-    {
-        let mut query_pairs = url.query_pairs_mut();
-        query_pairs.clear();
+    fn get_users_username_starred(&mut self, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
 
-        if let Some(param) = sort {
-            let sorting = match param {
-                Sort::Created => "created",
-                Sort::Updated => "updated",
-            };
-            query_pairs.append_pair("sort", &sorting[..]);
+        let mut url = match Url::parse(&format!("{}/users/{}/starred", self.api_url, username)[..]) {
+            Ok(url)  => url,
+            Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
+        };
+
+        //Limits the scope of the mutable borrow
+        {
+            let mut query_pairs = url.query_pairs_mut();
+            query_pairs.clear();
+
+            if let Some(param) = sort {
+                let sorting = match param {
+                    Sort::Created => "created",
+                    Sort::Updated => "updated",
+                };
+                query_pairs.append_pair("sort", &sorting[..]);
+            }
+
+            if let Some(param) = direction {
+                let dir = match param {
+                    Direction::Ascending  => "asc",
+                    Direction::Descending => "desc",
+                };
+                query_pairs.append_pair("direction", &dir[..]);
+            }
+
         }
 
-        if let Some(param) = direction {
-            let dir = match param {
-                Direction::Ascending  => "asc",
-                Direction::Descending => "desc",
-            };
-            query_pairs.append_pair("direction", &dir[..]);
+        utils::request_endpoint(self, format!("/users/{}/starred?{}", username, url.query().unwrap()))
+    }
+
+    fn get_user_starred(&mut self, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
+
+        let mut url = match Url::parse(&format!("{}/user/starred", self.api_url)[..]) {
+            Ok(url)  => url,
+            Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
+        };
+
+        //Limits the scope of the mutable borrow
+        {
+            let mut query_pairs = url.query_pairs_mut();
+            query_pairs.clear();
+
+            if let Some(param) = sort {
+                let sorting = match param {
+                    Sort::Created => "created",
+                    Sort::Updated => "updated",
+                };
+                query_pairs.append_pair("sort", &sorting[..]);
+            }
+
+            if let Some(param) = direction {
+                let dir = match param {
+                    Direction::Ascending  => "asc",
+                    Direction::Descending => "desc",
+                };
+                query_pairs.append_pair("direction", &dir[..]);
+            }
+
         }
+
+        utils::request_endpoint(self, format!("/users/starred?{}", url.query().unwrap()))
 
     }
 
-    utils::request_endpoint(client, format!("/users/{}/starred?{}", username, url.query().unwrap()))
-}
+    fn get_users_username_starred_timestamp(&mut self, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error> {
 
-pub fn get_users_starred(client: &mut Client, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
+        let mut url = match Url::parse(&format!("{}/users/{}/starred", self.api_url, username)[..]) {
+            Ok(url)  => url,
+            Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
+        };
 
-    let mut url = match Url::parse(&format!("{}/user/starred", client.api_url)[..]) {
-        Ok(url)  => url,
-        Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
-    };
+        //Limits the scope of the mutable borrow
+        {
+            let mut query_pairs = url.query_pairs_mut();
+            query_pairs.clear();
 
-    //Limits the scope of the mutable borrow
-    {
-        let mut query_pairs = url.query_pairs_mut();
-        query_pairs.clear();
+            if let Some(param) = sort {
+                let sorting = match param {
+                    Sort::Created => "created",
+                    Sort::Updated => "updated",
+                };
+                query_pairs.append_pair("sort", &sorting[..]);
+            }
 
-        if let Some(param) = sort {
-            let sorting = match param {
-                Sort::Created => "created",
-                Sort::Updated => "updated",
-            };
-            query_pairs.append_pair("sort", &sorting[..]);
+            if let Some(param) = direction {
+                let dir = match param {
+                    Direction::Ascending  => "asc",
+                    Direction::Descending => "desc",
+                };
+                query_pairs.append_pair("direction", &dir[..]);
+            }
+
         }
 
-        if let Some(param) = direction {
-            let dir = match param {
-                Direction::Ascending  => "asc",
-                Direction::Descending => "desc",
-            };
-            query_pairs.append_pair("direction", &dir[..]);
-        }
+        let mut header = self.get_default_headers();
+        header.remove::<Accept>();
+        header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
+
+        utils::request_endpoint_with_headers(self, format!("/users/{}/starred?{}", username, url.query().unwrap()), Some(header))
 
     }
 
-    utils::request_endpoint(client, format!("/users/starred?{}", url.query().unwrap()))
+    fn get_user_starred_timestamp(&mut self, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error> {
 
-}
+        let mut url = match Url::parse(&format!("{}/user/starred", self.api_url)[..]) {
+            Ok(url)  => url,
+            Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
+        };
 
-///Timestamp variants
-pub fn get_users_username_starred_timestamp(client: &mut Client, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error> {
+        //Limits the scope of the mutable borrow
+        {
+            let mut query_pairs = url.query_pairs_mut();
+            query_pairs.clear();
 
-    let mut url = match Url::parse(&format!("{}/users/{}/starred", client.api_url, username)[..]) {
-        Ok(url)  => url,
-        Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
-    };
+            if let Some(param) = sort {
+                let sorting = match param {
+                    Sort::Created => "created",
+                    Sort::Updated => "updated",
+                };
+                query_pairs.append_pair("sort", &sorting[..]);
+            }
 
-    //Limits the scope of the mutable borrow
-    {
-        let mut query_pairs = url.query_pairs_mut();
-        query_pairs.clear();
+            if let Some(param) = direction {
+                let dir = match param {
+                    Direction::Ascending  => "asc",
+                    Direction::Descending => "desc",
+                };
+                query_pairs.append_pair("direction", &dir[..]);
+            }
 
-        if let Some(param) = sort {
-            let sorting = match param {
-                Sort::Created => "created",
-                Sort::Updated => "updated",
-            };
-            query_pairs.append_pair("sort", &sorting[..]);
         }
 
-        if let Some(param) = direction {
-            let dir = match param {
-                Direction::Ascending  => "asc",
-                Direction::Descending => "desc",
-            };
-            query_pairs.append_pair("direction", &dir[..]);
-        }
+        let mut header = self.get_default_headers();
+        header.remove::<Accept>();
+        header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
+
+        utils::request_endpoint_with_headers(self, format!("/user/starred?{}", url.query().unwrap()), Some(header))
 
     }
 
-    let mut header = client.get_default_headers();
-    header.remove::<Accept>();
-    header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
-
-    utils::request_endpoint_with_headers(client, format!("/users/{}/starred?{}", username, url.query().unwrap()), Some(header))
-
-}
-
-pub fn get_users_starred_timestamp(client: &mut Client, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error> {
-
-    let mut url = match Url::parse(&format!("{}/user/starred", client.api_url)[..]) {
-        Ok(url)  => url,
-        Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
-    };
-
-    //Limits the scope of the mutable borrow
-    {
-        let mut query_pairs = url.query_pairs_mut();
-        query_pairs.clear();
-
-        if let Some(param) = sort {
-            let sorting = match param {
-                Sort::Created => "created",
-                Sort::Updated => "updated",
-            };
-            query_pairs.append_pair("sort", &sorting[..]);
-        }
-
-        if let Some(param) = direction {
-            let dir = match param {
-                Direction::Ascending  => "asc",
-                Direction::Descending => "desc",
-            };
-            query_pairs.append_pair("direction", &dir[..]);
-        }
-
+    fn get_user_starred_owner_repo(&mut self, owner: String, repo: String) -> Result<(), error::Error> {
+        utils::request_endpoint(self, format!("/user/starred/{}/{}", owner, repo))
     }
 
-    let mut header = client.get_default_headers();
-    header.remove::<Accept>();
-    header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
+    fn put_user_starred_owner_repo(&mut self, owner: String, repo: String) -> Result<(), error::Error> {
 
-    utils::request_endpoint_with_headers(client, format!("/user/starred?{}", url.query().unwrap()), Some(header))
+        let mut header = self.get_default_headers();
+        header.set(ContentLength(0u64));
 
-}
-
-///Reference: https://developer.github.com/v3/activity/starring/#check-if-you-are-starring-a-repository
-pub fn get_user_starred_owner_repo(client: &mut Client, owner: String, repo: String) -> Result<(), error::Error> {
-    utils::request_endpoint(client, format!("/user/starred/{}/{}", owner, repo))
-}
-
-///Reference: https://developer.github.com/v3/activity/starring/#star-a-repository
-pub fn put_user_starred_owner_repo(client: &mut Client, owner: String, repo: String) -> Result<(), error::Error> {
-
-    let mut header = client.get_default_headers();
-    header.set(ContentLength(0u64));
-
-    match client.get(format!("/user/starred/{}/{}", owner, repo), Some(header)) {
-        Ok(_)    => Ok(()),
-        Err(err) => Err(err)
+        match self.get(format!("/user/starred/{}/{}", owner, repo), Some(header)) {
+            Ok(_)    => Ok(()),
+            Err(err) => Err(err)
+        }
     }
-}
 
-///Reference: https://developer.github.com/v3/activity/starring/#unstar-a-repository
-pub fn delete_user_starred_owner_repo(client: &mut Client, owner: String, repo: String) -> Result<(), error::Error> {
-    match client.delete(format!("/user/starred/{}/{}", owner, repo), None) {
-        Ok(_)    => Ok(()),
-        Err(err) => Err(err)
+    fn delete_user_starred_owner_repo(&mut self, owner: String, repo: String) -> Result<(), error::Error> {
+        match self.delete(format!("/user/starred/{}/{}", owner, repo), None) {
+            Ok(_)    => Ok(()),
+            Err(err) => Err(err)
+        }
     }
 }
 
