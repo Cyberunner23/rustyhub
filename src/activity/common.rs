@@ -5,6 +5,8 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+//! # Common
+//!
 //! These are the responses that are in common or have
 //! very high similarity across the Activity endpoints.
 
