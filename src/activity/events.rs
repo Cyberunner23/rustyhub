@@ -48,101 +48,125 @@ pub struct Organization {
 
 
 ////////////////////////////////////////////////////////////
-//                       Functions                        //
+//                    Extension Trait                     //
 ////////////////////////////////////////////////////////////
 
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events)\]
-/// Returns the list of public events.
-/// ## Endpoint:
-/// GET /events
-pub fn get_events(client: &mut Client) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, "/events".into())
+pub trait EventsExt {
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events)\]
+    /// Returns the list of public events.
+    /// ## Endpoint:
+    /// GET /events
+    fn get_events(&mut self) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-repository-events)\]
+    /// Returns the list of repository events.
+    /// ## Endpoint:
+    /// GET /repos/:owner/:repo/events
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    fn get_repo_events(&mut self, owner: String, repo: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-for-a-network-of-repositories)\]
+    /// Returns a list public events for a network of repositories.
+    /// ## Endpoint:
+    /// GET /networks/:owner/:repo/events
+    /// ## Parameters:
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    fn get_networks_owner_repo_events(&mut self, owner: String, repo: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-for-an-organization)\]
+    /// Returns a list public events for an organization.
+    /// ## Endpoint:
+    /// GET /orgs/:org/events
+    /// ## Parameters:
+    /// * `org`: Name of the organization
+    fn get_orgs_org_events(&mut self, org: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-events-that-a-user-has-received)\]
+    /// Returns a list events that a user has received.
+    /// ## Endpoint:
+    /// GET /users/:username/received_events
+    /// ## Parameters:
+    /// * `username`: Name of the user
+    fn get_users_username_received_events(&mut self, username: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-that-a-user-has-received)\]
+    /// Returns a list public events that a user has received.
+    /// ## Endpoint:
+    /// GET /users/:username/received_events/public
+    /// ## Parameters:
+    /// * `username`: Name of the user
+    fn get_users_username_received_events_public(&mut self, username: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-events-performed-by-a-user)\]
+    /// Returns a list events performed by a user.
+    /// ## Endpoint:
+    /// GET /users/:username/events
+    /// ## Parameters:
+    /// * `username`: Name of the user
+    fn get_users_username_events(&mut self, username: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-performed-by-a-user)\]
+    /// Returns a list public events performed by a user.
+    /// ## Endpoint:
+    /// GET /users/:username/events/public
+    /// ## Parameters:
+    /// * `username`: Name of the user
+    fn get_users_username_events_public(&mut self, username: String) -> Result<Vec<Event>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/activity/events/#list-events-for-an-organization)\]
+    /// Returns a list events for an organization.
+    /// ## Endpoint:
+    /// GET /users/:username/events/orgs/:org
+    /// ## Parameters:
+    /// * `username`: Name of the user
+    /// * `org`: Name of the organization
+    fn get_users_username_events_orgs_org(&mut self, username: String, org: String) -> Result<Vec<Event>, error::Error>;
 }
 
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-repository-events)\]
-/// Returns the list of repository events.
-/// ## Endpoint:
-/// GET /repos/:owner/:repo/events
-/// ## Additional Parameters:
-/// * `owner`: Owner of the repository.
-/// * `repo`: Name of the repository.
-pub fn get_repo_events(client: &mut Client, owner: String, repo: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/repos/{}/{}/events", owner, repo))
+impl EventsExt for Client {
+
+    fn get_events(&mut self) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, "/events".into())
+    }
+
+    fn get_repo_events(&mut self, owner: String, repo: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/repos/{}/{}/events", owner, repo))
+    }
+
+    fn get_networks_owner_repo_events(&mut self, owner: String, repo: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/networks/{}/{}/events", owner, repo))
+    }
+
+    fn get_orgs_org_events(&mut self, org: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/orgs/{}/events", org))
+    }
+
+    fn get_users_username_received_events(&mut self, username: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/users/{}/received_events", username))
+    }
+
+    fn get_users_username_received_events_public(&mut self, username: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/users/{}/received_events/public", username))
+    }
+
+    fn get_users_username_events(&mut self, username: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/users/{}/events", username))
+    }
+
+    fn get_users_username_events_public(&mut self, username: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/users/{}/events/public", username))
+    }
+
+    fn get_users_username_events_orgs_org(&mut self, username: String, org: String) -> Result<Vec<Event>, error::Error> {
+        utils::request_endpoint(self, format!("/users/{}/events/orgs/{}", username, org))
+    }
 }
 
 //TODO: GET /repos/:owner/:repo/issues/events
 /////Reference: https://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-for-a-network-of-repositories)\]
-/// Returns a list public events for a network of repositories.
-/// ## Endpoint:
-/// GET /networks/:owner/:repo/events
-/// ## Additional Parameters:
-/// * `owner`: Owner of the repository.
-/// * `repo`: Name of the repository.
-pub fn get_networks_owner_repo_events(client: &mut Client, owner: String, repo: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/networks/{}/{}/events", owner, repo))
-}
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-for-an-organization)\]
-/// Returns a list public events for an organization.
-/// ## Endpoint:
-/// GET /orgs/:org/events
-/// ## Additional Parameters:
-/// * `org`: Name of the organization
-pub fn get_orgs_org_events(client: &mut Client, org: String) -> Result<Vec<Event>, error::Error> {
-     utils::request_endpoint(client, format!("/orgs/{}/events", org))
-}
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-events-that-a-user-has-received)\]
-/// Returns a list events that a user has received.
-/// ## Endpoint:
-/// GET /users/:username/received_events
-/// ## Additional Parameters:
-/// * `username`: Name of the user
-pub fn get_users_username_received_events(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/users/{}/received_events", username))
-}
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-that-a-user-has-received)\]
-/// Returns a list public events that a user has received.
-/// ## Endpoint:
-/// GET /users/:username/received_events/public
-/// ## Additional Parameters:
-/// * `username`: Name of the user
-pub fn get_users_username_received_events_public(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/users/{}/received_events/public", username))
-}
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-events-performed-by-a-user)\]
-/// Returns a list events performed by a user.
-/// ## Endpoint:
-/// GET /users/:username/events
-/// ## Additional Parameters:
-/// * `username`: Name of the user
-pub fn get_users_username_events(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/users/{}/events", username))
-}
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-public-events-performed-by-a-user)\]
-/// Returns a list public events performed by a user.
-/// ## Endpoint:
-/// GET /users/:username/events/public
-/// ## Additional Parameters:
-/// * `username`: Name of the user
-pub fn get_users_username_events_public(client: &mut Client, username: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/users/{}/events/public", username))
-}
-
-/// \[[Reference](https://developer.github.com/v3/activity/events/#list-events-for-an-organization)\]
-/// Returns a list events for an organization.
-/// ## Endpoint:
-/// GET /users/:username/events/orgs/:org
-/// ## Additional Parameters:
-/// * `username`: Name of the user
-/// * `org`: Name of the organization
-pub fn get_users_username_events_orgs_org(client: &mut Client, username: String, org: String) -> Result<Vec<Event>, error::Error> {
-    utils::request_endpoint(client, format!("/users/{}/events/orgs/{}", username, org))
-}
 
 //TODO: tests
