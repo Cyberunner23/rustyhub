@@ -5,6 +5,13 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+//! # Notifications
+//!
+//! These are the responses and API call functions related
+//! to the notifications endpoints of the API.
+//!
+//! Reference: https://developer.github.com/v3/activity/notifications/
+
 use hyper::{Error as HyperError, Url};
 use serde_json;
 
@@ -13,8 +20,6 @@ use common::Repository;
 use client::Client;
 use error;
 use utils;
-
-///Reference: https://developer.github.com/v3/activity/notifications/
 
 ///Response to most notifications requests
 #[derive(Clone, Debug, Deserialize, PartialEq)]
