@@ -7,10 +7,10 @@
 
 use hyper::header::{Accept, qitem};
 use hyper::mime::{Mime, TopLevel, SubLevel};
-use serde_json;
 
 use client::Client;
 use error;
+use utils;
 
 ///Reference: https://developer.github.com/v3/gitignore/
 
@@ -26,16 +26,12 @@ pub struct GitignoreTemplate {
 
 ///Reference: https://developer.github.com/v3/gitignore/#listing-available-templates
 pub fn get_gitignore_templates(client: &mut Client) -> Result<Vec<String>, error::Error> {
-    let mut response     = try!(client.get("/gitignore/templates".to_string(), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, "/gitignore/templates".into())
 }
 
 ///Reference: https://developer.github.com/v3/gitignore/#get-a-single-template
 pub fn get_gitignore_templates_name(client: &mut Client, name: &String) -> Result<GitignoreTemplate, error::Error> {
-    let mut response     = try!(client.get(format!("/gitignore/templates/{}", name).to_string(), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/gitignore/templates/{}", name))
 }
 
 pub fn get_gitignore_templates_name_raw(client: &mut Client, name: &String) -> Result<String, error::Error> {
@@ -44,9 +40,7 @@ pub fn get_gitignore_templates_name_raw(client: &mut Client, name: &String) -> R
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.raw".to_string()), vec![]))]));
 
-    let mut response     = try!(client.get(format!("/gitignore/templates/{}", name).to_string(), Some(header)));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint_with_headers(client, format!("/gitignore/templates/{}", name), Some(header))
 }
 
 //TODO: TESTS

@@ -6,41 +6,33 @@
 // copied, modified, or distributed except according to those terms.
 
 use hyper::{Error as HyperError, Url};
-use serde_json;
 
 use activity::common::Subscription;
 use client::Client;
 use common::{Repository, User};
 use error;
+use utils;
 
 ///Reference: https://developer.github.com/v3/activity/watching/
 
 
 ///Reference: https://developer.github.com/v3/activity/watching/#list-watchers
 pub fn get_repos_owner_repo_subscribers(client: &mut Client, owner: String, repo: String) -> Result<User, error::Error> {
-    let mut response     = try!(client.get(format!("/repos/{}/{}/subscribers", owner, repo), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/repos/{}/{}/subscribers", owner, repo))
 }
 
 ///Reference: https://developer.github.com/v3/activity/watching/#list-repositories-being-watched
 pub fn get_users_username_subscription(client: &mut Client, username: String) -> Result<Repository, error::Error> {
-    let mut response     = try!(client.get(format!("/users/{}/subscriptions", username), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/users/{}/subscriptions", username))
 }
 
 pub fn get_user_subscription(client: &mut Client) -> Result<Repository, error::Error> {
-    let mut response     = try!(client.get("/user/subscriptions".to_string(), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, "/user/subscriptions".into())
 }
 
 ///Reference: https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
 pub fn get_repos_owner_repo_subscription(client: &mut Client, owner: String, repo: String) -> Result<Subscription, error::Error> {
-    let mut response     = try!(client.get(format!("/repos/{}/{}/subscription", owner, repo), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/repos/{}/{}/subscription", owner, repo))
 }
 
 ///Reference: https://developer.github.com/v3/activity/watching/#set-a-repository-subscription
@@ -59,9 +51,7 @@ pub fn put_repos_owner_repo_subscription(client: &mut Client, owner: String, rep
         query_pairs.append_pair("ignored",    &format!("{}", ignored)[..]);
     }
 
-    let mut response     = try!(client.put(format!("/repos/{}/{}/subscription?{}", owner, repo, url.query().unwrap()), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/repos/{}/{}/subscription?{}", owner, repo, url.query().unwrap()))
 }
 
 ///Reference: https://developer.github.com/v3/activity/watching/#delete-a-repository-subscription

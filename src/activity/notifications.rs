@@ -12,6 +12,7 @@ use activity::common::Subscription;
 use common::Repository;
 use client::Client;
 use error;
+use utils;
 
 ///Reference: https://developer.github.com/v3/activity/notifications/
 
@@ -76,9 +77,7 @@ pub fn get_notifications(client: &mut Client,
         }
     }
 
-    let mut response     = try!(client.get(format!("/notifications?{}", url.query().unwrap()), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/notifications?{}", url.query().unwrap()))
 }
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#list-your-notifications-in-a-repository
@@ -117,9 +116,7 @@ pub fn get_repos_owner_repo_notifications(client: &mut Client,
         }
     }
 
-    let mut response     = try!(client.get(format!("/repos/{}/{}/notifications?{}", owner, repo, url.query().unwrap()), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/repos/{}/{}/notifications?{}", owner, repo, url.query().unwrap()))
 }
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#mark-as-read
@@ -166,9 +163,7 @@ pub fn put_repos_owner_repo_notifications(client: &mut Client, owner: String, re
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#view-a-single-thread
 pub fn get_notifications_threads_id(client: &mut Client, id: String) -> Result<Notification, error::Error> {
-    let mut response     = try!(client.get(format!("/notifications/threads/{}", id), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/notifications/threads/{}", id))
 }
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#mark-a-thread-as-read
@@ -181,9 +176,7 @@ pub fn patch_botifications_threads_id(client: &mut Client, id: String) -> Result
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#get-a-thread-subscription
 pub fn get_notifications_threads_id_subscription(client: &mut Client, id: String) -> Result<Subscription, error::Error> {
-    let mut response     = try!(client.get(format!("/notifications/threads/{}/subscription", id), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/notifications/threads/{}/subscription", id))
 }
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#set-a-thread-subscription
@@ -205,6 +198,7 @@ pub fn put_notifications_threads_id_subscription(client: &mut Client, id: String
     let mut response     = try!(client.put(format!("/notifications/threads/{}/subscription?{}", id, url.query().unwrap()), None));
     let     response_str = try!(Client::response_to_string(&mut response));
     serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+
 }
 
 ///Reference: https://developer.github.com/v3/activity/notifications/#delete-a-thread-subscription

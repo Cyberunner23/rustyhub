@@ -5,10 +5,9 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-use serde_json;
-
 use client::Client;
 use error;
+use utils;
 
 ///Reference: https://developer.github.com/v3/meta/
 
@@ -26,9 +25,7 @@ pub struct Meta {
 ////////////////////////////////////////////////////////////
 
 pub fn get_meta(client: &mut Client) -> Result<Meta, error::Error> {
-    let mut response     = try!(client.get("/meta".to_string(), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, "/meta".into())
 }
 
 //TODO: TESTS
