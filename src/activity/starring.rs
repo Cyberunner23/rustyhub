@@ -28,17 +28,22 @@ pub struct ListStarTimeStamp {
     pub user:       User
 }
 
+///Response returned by the timestamp variant of list
+/// stargazers
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct ListRepoStarTimeStamp {
     pub starred_at: String,
     pub repo:       Repository
 }
 
+///Enum for input of sorting in get user starred endpoints
 pub enum Sort {
     Created,
     Updated
 }
 
+///Enum for input of dorting direction in get user starred
+/// endpoints
 pub enum Direction {
     Ascending,
     Descending
