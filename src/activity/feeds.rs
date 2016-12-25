@@ -45,11 +45,22 @@ pub struct FeedsElem {
 
 
 ////////////////////////////////////////////////////////////
-//                       Functions                        //
+//                    Extension Trait                     //
 ////////////////////////////////////////////////////////////
 
-pub fn get_feeds(client: &mut Client) -> Result<Feeds, error::Error> {
-    utils::request_endpoint(client, "/feeds".into())
+pub trait FeedsExt {
+
+    /// \[[Reference](https://developer.github.com/v3/activity/feeds/#list-feeds)\]
+    /// Returns the list of feeds.
+    /// ## Endpoint:
+    /// GET /feeds
+    fn get_feeds(&mut self) -> Result<Feeds, error::Error>;
+}
+
+impl FeedsExt for Client {
+    fn get_feeds(&mut self) -> Result<Feeds, error::Error> {
+        utils::request_endpoint(self, "/feeds".into())
+    }
 }
 
 //TODO:TESTS
