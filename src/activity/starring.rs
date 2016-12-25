@@ -8,11 +8,11 @@
 use hyper::{Error as HyperError, Url};
 use hyper::header::{Accept, ContentLength, qitem};
 use hyper::mime::{Mime, TopLevel, SubLevel};
-use serde_json;
 
 use common::{Repository, User};
 use client::Client;
 use error;
+use utils;
 
 ///Reference: https://developer.github.com/v3/activity/starring/
 
@@ -46,9 +46,7 @@ pub enum Direction {
 
 ///Reference: https://developer.github.com/v3/activity/starring/#list-stargazers
 pub fn get_repos_owner_repo_stargazers(client: &mut Client, owner: String, repo: String) -> Result<Vec<User>, error::Error> {
-    let mut response     = try!(client.get(format!("/repos/{}/{}/stargazers", owner, repo).to_string(), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/repos/{}/{}/stargazers", owner, repo))
 }
 
 ///Timestamp variant
@@ -58,9 +56,7 @@ pub fn get_repos_owner_repo_stargazers_timestamp(client: &mut Client, owner: Str
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    let mut response     = try!(client.get(format!("/repos/{}/{}/stargazers", owner, repo).to_string(), Some(header)));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/repos/{}/{}/stargazers", owner, repo))
 }
 
 ///Reference: https://developer.github.com/v3/activity/starring/#list-repositories-being-starred
@@ -94,10 +90,7 @@ pub fn get_users_username_starred(client: &mut Client, username: String, sort: O
 
     }
 
-    let mut response     = try!(client.get(format!("/users/{}/starred?{}", username, url.query().unwrap()), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
-
+    utils::request_endpoint(client, format!("/users/{}/starred?{}", username, url.query().unwrap()))
 }
 
 pub fn get_users_starred(client: &mut Client, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
@@ -130,9 +123,7 @@ pub fn get_users_starred(client: &mut Client, sort: Option<Sort>, direction: Opt
 
     }
 
-    let mut response     = try!(client.get(format!("/users/starred?{}", url.query().unwrap()), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/users/starred?{}", url.query().unwrap()))
 
 }
 
@@ -171,9 +162,7 @@ pub fn get_users_username_starred_timestamp(client: &mut Client, username: Strin
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    let mut response     = try!(client.get(format!("/users/{}/starred?{}", username, url.query().unwrap()), Some(header)));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/users/{}/starred?{}", username, url.query().unwrap()))
 
 }
 
@@ -211,17 +200,13 @@ pub fn get_users_starred_timestamp(client: &mut Client, sort: Option<Sort>, dire
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    let mut response     = try!(client.get(format!("/user/starred?{}", url.query().unwrap()), Some(header)));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/user/starred?{}", url.query().unwrap()))
 
 }
 
 ///Reference: https://developer.github.com/v3/activity/starring/#check-if-you-are-starring-a-repository
 pub fn get_user_starred_owner_repo(client: &mut Client, owner: String, repo: String) -> Result<(), error::Error> {
-    let mut response     = try!(client.get(format!("/user/starred/{}/{}", owner, repo), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, format!("/user/starred/{}/{}", owner, repo))
 }
 
 ///Reference: https://developer.github.com/v3/activity/starring/#star-a-repository

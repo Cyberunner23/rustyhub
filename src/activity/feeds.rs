@@ -5,10 +5,9 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-use serde_json;
-
 use client::Client;
 use error;
+use utils;
 
 ///Reference: https://developer.github.com/v3/activity/feeds/
 
@@ -50,9 +49,7 @@ pub struct FeedsElem {
 ////////////////////////////////////////////////////////////
 
 pub fn get_feeds(client: &mut Client) -> Result<Feeds, error::Error> {
-    let mut response     = try!(client.get("/feeds".to_string(), None));
-    let     response_str = try!(Client::response_to_string(&mut response));
-    serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
+    utils::request_endpoint(client, "/feeds".into())
 }
 
 //TODO:TESTS
