@@ -5,11 +5,16 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+//! # Feeds
+//!
+//! These are the responses and API call functions related
+//! to the feeds endpoints of the API.
+//!
+//! Reference: https://developer.github.com/v3/activity/feeds/
+
 use client::Client;
 use error;
 use utils;
-
-///Reference: https://developer.github.com/v3/activity/feeds/
 
 ///Response to feeds requests
 #[derive(Clone, Debug, Deserialize, PartialEq)]
