@@ -56,7 +56,7 @@ pub fn get_repos_owner_repo_stargazers_timestamp(client: &mut Client, owner: Str
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    utils::request_endpoint(client, format!("/repos/{}/{}/stargazers", owner, repo))
+    utils::request_endpoint_with_headers(client, format!("/repos/{}/{}/stargazers", owner, repo), Some(header))
 }
 
 ///Reference: https://developer.github.com/v3/activity/starring/#list-repositories-being-starred
@@ -162,7 +162,7 @@ pub fn get_users_username_starred_timestamp(client: &mut Client, username: Strin
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    utils::request_endpoint(client, format!("/users/{}/starred?{}", username, url.query().unwrap()))
+    utils::request_endpoint_with_headers(client, format!("/users/{}/starred?{}", username, url.query().unwrap()), Some(header))
 
 }
 
@@ -200,7 +200,7 @@ pub fn get_users_starred_timestamp(client: &mut Client, sort: Option<Sort>, dire
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.star+json".to_string()), vec![]))]));
 
-    utils::request_endpoint(client, format!("/user/starred?{}", url.query().unwrap()))
+    utils::request_endpoint_with_headers(client, format!("/user/starred?{}", url.query().unwrap()), Some(header))
 
 }
 

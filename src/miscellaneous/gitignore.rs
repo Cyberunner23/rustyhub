@@ -40,7 +40,7 @@ pub fn get_gitignore_templates_name_raw(client: &mut Client, name: &String) -> R
     header.remove::<Accept>();
     header.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3.raw".to_string()), vec![]))]));
 
-    utils::request_endpoint(client, format!("/gitignore/templates/{}", name))
+    utils::request_endpoint_with_headers(client, format!("/gitignore/templates/{}", name), Some(header))
 }
 
 //TODO: TESTS
