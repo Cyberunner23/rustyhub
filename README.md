@@ -1,4 +1,8 @@
-# Rustyhub
+# Rustyhub 
+
+[![Build Status](https://travis-ci.org/Cyberunner23/rustyhub.svg?branch=dev)](https://travis-ci.org/Cyberunner23/rustyhub)
+[![Build Status](https://ci.appveyor.com/api/projects/status/nusmbi7yy3aa2glk?svg=true)](https://ci.appveyor.com/project/Cyberunner23/rustyhub)
+
 
 A client for the Github v3 API (In development)
 
