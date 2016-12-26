@@ -10,10 +10,12 @@ use std::io::Read;
 
 use serde_json;
 
+use hyper::{Error as HyperError, Url};
 use hyper::client::{Client as HyperClient, Body, Response};
 //use hyper::error::Error as HyperError;
 use hyper::header::{Accept,
                     Authorization,
+                    Basic,
                     Bearer,
                     Headers,
                     Location,
@@ -24,6 +26,7 @@ use hyper::mime::{Mime, TopLevel, SubLevel};
 use hyper::status::StatusCode;
 
 use error;
+use auth::auth::Auth;
 
 /// The default API URL.
 static DEFAULT_API_URL: &'static str = "https://api.github.com";
@@ -35,30 +38,30 @@ static DEFAULT_API_URL: &'static str = "https://api.github.com";
 pub struct Client {
 
     /// Internal http client.
-    pub http_client: HyperClient,
+    pub http_client:    HyperClient,
     /// Base URL to the API, can be modified to use the enterprise API.
-    pub api_url:     String,
+    pub api_url:        String,
     /// Value used for the User-Agent key in request headers.
-    pub user_agent:  String,
+    pub user_agent:     String,
     /// Optional authorization token, acquired from https://github.com/settings/tokens,
     /// should be set to None when purely accessing endpoints requiring no authentication.
-    pub auth_token:  Option<String>,
+    pub authentication: Auth,
 }
 
 impl Client {
 
     /// Creates a Client state with the default API URL.
-    pub fn new(user_agent: &str, token: Option<String>) -> Client {
-        Client::with_url(DEFAULT_API_URL, user_agent, token)
+    pub fn new(user_agent: &str, auth: Auth) -> Client {
+        Client::with_url(DEFAULT_API_URL, user_agent, auth)
     }
 
     /// Creates a Client state an API URL other than the default.
-    pub fn with_url(url: &str, user_agent: &str, token: Option<String>) -> Client {
+    pub fn with_url(url: &str, user_agent: &str, auth: Auth) -> Client {
         Client {
-            http_client: HyperClient::new(),
-            api_url:     url.to_string(),
-            user_agent:  user_agent.to_string(),
-            auth_token:  token
+            http_client:     HyperClient::new(),
+            api_url:         url.to_string(),
+            user_agent:      user_agent.to_string(),
+            authentication:  auth
         }
     }
 
@@ -67,7 +70,6 @@ impl Client {
         let mut headers = Headers::new();
         headers.set(Accept(vec![qitem(Mime(TopLevel::Application, SubLevel::Ext("vnd.github.v3+json".to_string()), vec![]))])); //"application/vnd.github.v3+json"
         headers.set(UserAgent(self.user_agent[..].to_owned()));
-        if let Some(ref auth) = self.auth_token {headers.set(Authorization(Bearer{token: auth[..].to_owned()}))}
         return headers;
     }
 
@@ -142,20 +144,73 @@ impl Client {
         }
     }*/
 
+    fn set_request_authentication(auth: &Auth, url: String, headers: &mut Headers) -> Result<String, error::Error> {
+        match auth {
+            &Auth::NoAuth => Ok(url),
+            &Auth::OAuth2Token(ref token) => {
+                headers.set(Authorization(Bearer{token: token[..].to_owned()}));
+                Ok(url)
+            },
+            &Auth::OAuth2KeySecret(ref client_id, ref client_secret) => {
+
+                let mut url_parsed = match Url::parse(&url[..]) {
+                    Ok(url)  => url,
+                    Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
+                };
+
+                //Limits the scope of the mutable borrow
+                {
+                    let mut query_pairs = url_parsed.query_pairs_mut();
+                    query_pairs.append_pair("client_id",     &client_id[..]);
+                    query_pairs.append_pair("client_secret", &client_secret[..]);
+                }
+
+                Ok(url_parsed.into_string())
+            },
+            &Auth::Basic(ref username, ref password, ref otp_token) => {
+
+                headers.set(Authorization(Basic{username: username.clone(), password: Some(password.clone())}));
+
+                if let &Some(ref token) = otp_token {
+                    let mut url_parsed = match Url::parse(&url[..]) {
+                        Ok(url)  => url,
+                        Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
+                    };
+
+                    //Limits the scope of the mutable borrow
+                    {
+                        let mut query_pairs = url_parsed.query_pairs_mut();
+                        query_pairs.append_pair("X-GitHub-OTP", &token[..]);
+                    }
+
+                    return Ok(url_parsed.into_string());
+                }
+
+                return Ok(url);
+            }
+        }
+    }
 
     fn make_request(&self, method: Method, endpoint: String, headers: Option<Headers>) -> Result<Response, error::Error> {
+
         //if no headers use default
-        let request_header = headers.unwrap_or_else(|| self.get_default_headers());
+        let mut request_header = headers.unwrap_or_else(|| self.get_default_headers());
+
+        //Build full URL
+        let mut url = format!("{}{}", self.api_url, endpoint);
+
+        //Set the authentication
+        url = try!(Client::set_request_authentication(&self.authentication, url, &mut request_header));
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
-        let mut response = try!(self.http_client.request(method, &format!("{}{}", self.api_url, endpoint)[..])
+        let mut response = try!(self.http_client.request(method, &url[..])
             .headers(request_header)
             .send()
             .map_err(error::Error::HTTP));
 
         //Handle redirects
-        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
+        while let Some(loc) = Client::get_redirect(&url, &mut response) {
             response = try!(self.http_client.get(&loc[..])
                 .headers(request_header_copy.clone())
                 .send()
@@ -176,20 +231,26 @@ impl Client {
                          headers: Option<Headers>,
                          body: String) -> Result<Response, error::Error> {
         //if no headers use default
-        let request_header = headers.unwrap_or_else(|| self.get_default_headers());
+        let mut request_header = headers.unwrap_or_else(|| self.get_default_headers());
+
+        //Build full URL
+        let mut url = format!("{}{}", self.api_url, endpoint);
+
+        //Set the authentication
+        url = try!(Client::set_request_authentication(&self.authentication, url, &mut request_header));
 
         //In case we get redirected, we will need the same headers
         let     request_header_copy = request_header.clone();
         let     body_len  = body.clone().len();
         let     body_copy = body.clone();
-        let mut response  = try!(self.http_client.request(method.clone(), &format!("{}{}", self.api_url, endpoint)[..])
+        let mut response  = try!(self.http_client.request(method.clone(), &url[..])
             .headers(request_header)
             .body(Body::BufBody(&body.into_bytes()[..], body_len))
             .send()
             .map_err(error::Error::HTTP));
 
         //Handle redirects
-        while let Some(loc) = Client::get_redirect(&format!("{}{}", self.api_url, endpoint), &mut response) {
+        while let Some(loc) = Client::get_redirect(&url, &mut response) {
             response = try!(self.http_client.request(method.clone(), &loc[..])
                 .headers(request_header_copy.clone())
                 .body(Body::BufBody(&body_copy.clone().into_bytes()[..], body_len))

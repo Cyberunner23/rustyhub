@@ -28,13 +28,14 @@
 //!
 //! extern crate rustyhub;
 //!
-//! use rustyhub::client::Client;
 //! use rustyhub::activity::events;
+//! use rustyhub::auth::auth::Auth;
+//! use rustyhub::client::Client;
 //!
 //! fn main() {
 //!
 //!     let github_token = "0000000000000000000000000000000000000000".to_string();
-//!     let mut client = Client::new("rusyhub-UserAgent", Some(github_token));
+//!     let mut client = Client::new("rusyhub-UserAgent", Auth::OAuth2Token(github_token)));
 //!
 //!     let events = events::get_events(&mut client).unwrap();
 //!
@@ -56,6 +57,7 @@ extern crate serde_json;
 
 //TODO: Payloads
 pub mod activity;
+pub mod auth;
 //TODO: Licenses once out of preview
 pub mod miscellaneous;
 //TODO: enterprise
