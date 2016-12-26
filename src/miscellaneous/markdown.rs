@@ -49,7 +49,7 @@ pub enum MarkdownRawMIME {
 
 
 ////////////////////////////////////////////////////////////
-//                       Functions                        //
+//                    Extension Trait                     //
 ////////////////////////////////////////////////////////////
 
 pub trait MarkdownExt {
