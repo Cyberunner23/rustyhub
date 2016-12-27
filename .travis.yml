@@ -46,7 +46,7 @@ after_success:
         && git config user.name "doc upload bot"
         && git config user.email "nobody@example.com"
         && rm -rf rustyhub
-        && mv ../target/doc rustyhub
+        && mv ../target/doc/rustyhub rustyhub
         && git add -A rustyhub
         && git commit -qm "Doc upload."
         && git push -q origin gh-pages;
