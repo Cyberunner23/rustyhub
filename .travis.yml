@@ -40,8 +40,8 @@ after_success:
         && mkdir -p ~/.ssh
         && openssl aes-256-cbc -K $encrypted_d9ac7fa35307_key -iv $encrypted_d9ac7fa35307_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
         && chmod 600 ~/.ssh/id_rsa
-        && mv -r ./target/doc ${HOME}/doc
-        && mv -r ./target/.git ${HOME}/.git
+        && mv ./target/doc ${HOME}/doc
+        && mv ./target/.git ${HOME}/.git
         && git config user.name "doc upload bot"
         && git config user.email "nobody@example.com"
         && git checkout gh-pages
