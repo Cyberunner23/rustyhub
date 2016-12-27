@@ -63,13 +63,13 @@ pub mod miscellaneous;
 //TODO: enterprise
 //TODO: gists
 //TODO: git_data
-//TODO: integrations
+//TODO: integrations once out of preview
 pub mod issues;
-//TODO: migration
+//TODO: migration once out of preview
 //TODO: organizations
-//TODO: projects
+//TODO: projects once out of preview
 //TODO: pull_requests
-//TODO: reactions
+//TODO: reactions once out of preview
 //TODO: repositories
 //TODO: search
 //TODO: users
