@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Permissions",""],["Repository","Common structures found across various Github API responses"],["User",""]]});

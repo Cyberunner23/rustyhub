@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Event","The response of most event requests."],["Organization","Sub-component of the Event response"]],"trait":[["EventsExt",""]]});

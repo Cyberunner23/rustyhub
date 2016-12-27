@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Client","Struct with client state, values in this struct may be modified at any time, the new values will be used from the next API call Handles averything related to HTTP"]]});

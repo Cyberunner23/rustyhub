@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Notification","Response to most notifications requests"],["Subject","Sub-component of the Notification response"]],"trait":[["NotificationsExt",""]]});

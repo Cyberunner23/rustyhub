@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MarkdownRawMIME","Requested mimetype of the rendered text for the raw variant."]],"struct":[["MarkdownRequest","Input parameters for the markdown endpoints."]],"trait":[["MarkdownExt",""]]});
