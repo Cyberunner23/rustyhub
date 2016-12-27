@@ -24,16 +24,16 @@ pub enum Error {
 
 #[derive(Debug, Deserialize)]
 pub struct GithubError {
-    message:           String,
-    documentation_url: Option<String>,
-    errors:            Option<Vec<GithubErrorErrors>>
+    pub message:           String,
+    pub documentation_url: Option<String>,
+    pub errors:            Option<Vec<GithubErrorErrors>>
 }
 
 #[derive(Debug, Deserialize)]
 pub struct GithubErrorErrors{
-    resources: String,
-    field:     String,
-    code:      String
+    pub resources: String,
+    pub field:     String,
+    pub code:      String
 }
 
 //TODO: Tests
