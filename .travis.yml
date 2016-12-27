@@ -35,7 +35,7 @@ before_install:
   - tar -xvf Travis-${TRAVIS_OS_NAME}-stable.tar.gz -C ${TRELLOBST_DIR}
 
 after_success:
-  - if [ ! -z ${TRAVIS_TAG} ] ; then
+  - if [ ! -z ${TRAVIS_TAG} ] && [ ! ${TRAVIS_OS_NAME} == "osx" ] ; then
            set -e
         && cargo doc
         && mkdir -p ~/.ssh
