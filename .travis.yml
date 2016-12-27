@@ -50,7 +50,7 @@ after_success:
         && mv ${HOME}/.git ./.git
         && git add *
         && git commit -a -m "Doc upload."
-        && git push -q origin gh-pages
+        && git push -q origin gh-pages;
     fi
   - 'if [ ${TRAVIS_SECURE_ENV_VARS} = true ] ; then
            tar -zcf build.tar.gz ${BUILD_DIRECTORY}
