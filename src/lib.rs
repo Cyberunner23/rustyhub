@@ -37,7 +37,7 @@
 //!     let github_token = "0000000000000000000000000000000000000000".to_string();
 //!     let mut client = Client::new("rusyhub-UserAgent", Auth::OAuth2Token(github_token)));
 //!
-//!     let events = events::get_events(&mut client).unwrap();
+//!     let events = client.get_events(&mut client).unwrap();
 //!
 //! }
 //!
