@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["RateLimit","The response to rate_limit endpoint."],["RateLimitElement","Sub-component of the rate_limit response."],["RateLimitResources","Sub-component of the rate_limit response."]],"trait":[["RateLimitExt",""]]});
