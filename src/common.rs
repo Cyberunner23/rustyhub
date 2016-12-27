@@ -5,7 +5,7 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-///Common structures found across various Github API responses
+///Common structures found across many Github API responses
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Repository {
     pub id:                u64,
@@ -76,6 +76,8 @@ pub struct Repository {
     pub permissions:       Option<Permissions>
 }
 
+/// Sub-component for the Repository and the response type
+/// some endpoints
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct User {
     pub login:               String,
@@ -98,6 +100,7 @@ pub struct User {
     pub site_admin:          Option<bool>
 }
 
+/// Sub-component of the Repository
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Permissions {
     pub admin: bool,
