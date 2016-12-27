@@ -6,6 +6,8 @@
 
 A client for the Github v3 API (In development)
 
+[Documentation](https://cyberunner23.github.io/rustyhub/rustyhub/index.html)
+
 ## License
 
 Licensed under either of

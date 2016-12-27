@@ -2,7 +2,7 @@
 name = "rustyhub"
 version = "0.3.0"
 description = "A client for the Github v3 API"
-documentation = "https://docs.rs/rustyhub"
+documentation = "https://cyberunner23.github.io/rustyhub/rustyhub/index.html"
 repository = "https://github.com/Cyberunner23/rustyhub"
 authors = ["Cyberunner23 <cyberunner23@protonmail.com>"]
 keywords = ["github", "api", "v3", "rest"]
