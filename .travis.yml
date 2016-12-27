@@ -35,6 +35,23 @@ before_install:
   - tar -xvf Travis-${TRAVIS_OS_NAME}-stable.tar.gz -C ${TRELLOBST_DIR}
 
 after_success:
+  - if [ ! -z ${TRAVIS_TAG} ] ; then
+           cargo doc
+        && mkdir -p ~/.ssh
+        && openssl aes-256-cbc -K $encrypted_d9ac7fa35307_key -iv $encrypted_d9ac7fa35307_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
+        && chmod 600 ~/.ssh/id_rsa
+        && mv -r ./target/doc ${HOME}/doc
+        && mv -r ./target/.git ${HOME}/.git
+        && git config user.name "doc upload bot"
+        && git config user.email "nobody@example.com"
+        && git checkout gh-pages
+        && rm -rf *
+        && mv ${HOME}/doc ./
+        && mv ${HOME}/.git ./.git
+        && git add *
+        && git commit -a -m "Doc upload."
+        && git push -q origin gh-pages
+    fi
   - 'if [ ${TRAVIS_SECURE_ENV_VARS} = true ] ; then
            tar -zcf build.tar.gz ${BUILD_DIRECTORY}
         && export BUILD_LINK=$(curl --upload-file ./build.tar.gz https://transfer.sh/build.tar.gz)
