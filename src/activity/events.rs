@@ -11,6 +11,9 @@
 //! These are the responses and API call functions related
 //! to the event endpoints of the API.
 //!
+//! NOTE: `GET /repos/:owner/:repo/issues/events` is in
+//! issues::events
+//!
 //! Reference: https://developer.github.com/v3/activity/events/
 
 use std::collections::BTreeMap;
@@ -165,8 +168,5 @@ impl EventsExt for Client {
         utils::request_endpoint(self, format!("/users/{}/events/orgs/{}", username, org))
     }
 }
-
-//TODO: GET /repos/:owner/:repo/issues/events
-/////Reference: https://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository
 
 //TODO: tests

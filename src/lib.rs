@@ -64,6 +64,7 @@ pub mod miscellaneous;
 //TODO: gists
 //TODO: git_data
 //TODO: integrations
+pub mod issues;
 //TODO: migration
 //TODO: organizations
 //TODO: projects
