@@ -36,7 +36,20 @@ before_install:
 
 after_success:
   - if [ ! -z ${TRAVIS_TAG} ] ; then
-        ./doc_push.sh;
+           set -e
+        && cargo doc
+        && mkdir -p ~/.ssh
+        && openssl aes-256-cbc -K $encrypted_d9ac7fa35307_key -iv $encrypted_d9ac7fa35307_iv -in ./id_rsa.enc -out ~/.ssh/id_rsa -d
+        && chmod 600 ~/.ssh/id_rsa
+        && git clone --branch gh-pages git@github.com:Cyberunner23/rustyhub deploy_docs
+        && cd deploy_docs
+        && git config user.name "doc upload bot"
+        && git config user.email "nobody@example.com"
+        && rm -rf rustyhub
+        && mv ../target/doc rustyhub
+        && git add -A rustyhub
+        && git commit -qm "Doc upload."
+        && git push -q origin gh-pages;
     fi
   - 'if [ ${TRAVIS_SECURE_ENV_VARS} = true ] ; then
            tar -zcf build.tar.gz ${BUILD_DIRECTORY}
