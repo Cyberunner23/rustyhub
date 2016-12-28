@@ -58,26 +58,40 @@ pub trait IssueEventsExt {
     /// * `owner`: Owner of the repository.
     /// * `repo`: Name of the repository.
     /// * `issue_number`: Number of the issue.
-    fn get_owner_repo_issues_issue_number_events(&mut self, owner: String, repo: String, issue_number: u64) -> Result<Vec<IssueEvent>, error::Error>;
+    fn get_repos_owner_repo_issues_issue_number_events(&mut self, owner: String, repo: String, issue_number: u64) -> Result<Vec<IssueEvent>, error::Error>;
 
     /// \[[Reference](https://developer.github.com/v3/issues/events/#list-events-for-a-repository)\]
-    /// Returns the list of events for arepository.
+    /// Returns the list of events for a repository.
     /// ## Endpoint:
     /// GET /repos/:owner/:repo/issues/events
     /// ## Parameters
     /// * `owner`: Owner of the repository.
     /// * `repo`: Name of the repository.
-    fn get_owner_repo_issues_events(&mut self, owner: String, repo: String) -> Result<Vec<IssueEventRepo>, error::Error>;
+    fn get_repos_owner_repo_issues_events(&mut self, owner: String, repo: String) -> Result<Vec<IssueEventRepo>, error::Error>;
+
+    /// \[[Reference](https://developer.github.com/v3/issues/events/#get-a-single-event)\]
+    /// Returns a single event for a repository.
+    /// ## Endpoint:
+    /// GET /repos/:owner/:repo/issues/events/:id
+    /// ## Parameters
+    /// * `owner`: Owner of the repository.
+    /// * `repo`: Name of the repository.
+    /// * `id`: Issue ID.
+    fn get_repos_owner_repo_issues_events_id(&mut self, owner: String, repo: String, id: u64) -> Result<Vec<IssueEventRepo>, error::Error>;
 }
 
 impl IssueEventsExt for Client {
 
-    fn get_owner_repo_issues_issue_number_events(&mut self, owner: String, repo: String, issue_number: u64) -> Result<Vec<IssueEvent>, error::Error> {
+    fn get_repos_owner_repo_issues_issue_number_events(&mut self, owner: String, repo: String, issue_number: u64) -> Result<Vec<IssueEvent>, error::Error> {
         utils::request_endpoint(self, format!("/repos/{}/{}/issues/{}/events", owner, repo, issue_number))
     }
 
-    fn get_owner_repo_issues_events(&mut self, owner: String, repo: String) -> Result<Vec<IssueEventRepo>, error::Error> {
+    fn get_repos_owner_repo_issues_events(&mut self, owner: String, repo: String) -> Result<Vec<IssueEventRepo>, error::Error> {
         utils::request_endpoint(self, format!("/repos/{}/{}/issues/events", owner, repo))
+    }
+
+    fn get_repos_owner_repo_issues_events_id(&mut self, owner: String, repo: String, id: u64) -> Result<Vec<IssueEventRepo>, error::Error> {
+        utils::request_endpoint(self, format!("/repos/{}/{}/issues/events/{}", owner, repo, id))
     }
 }
 
