@@ -24,6 +24,8 @@ use utils;
 
 /// Endpoints for issue events.
 pub mod events;
+/// Endpoints for issue comments.
+pub mod comments;
 
 
 /// Return type for Issue endpoints and sub component for
@@ -280,7 +282,6 @@ impl Assignee {
         }
     }
 }
-
 
 
 ////////////////////////////////////////////////////////////
