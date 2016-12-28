@@ -29,10 +29,10 @@ pub enum Sort {
 }
 
 impl Sort {
-    fn to_str(self) -> String {
+    fn to_str(&self) -> String {
         match self {
-            Sort::Completeness => "completeness".to_string(),
-            Sort::DueOn        => "due_on".to_string(),
+            &Sort::Completeness => "completeness".to_string(),
+            &Sort::DueOn        => "due_on".to_string(),
         }
     }
 }

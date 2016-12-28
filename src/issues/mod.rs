@@ -177,13 +177,13 @@ pub enum Filter {
 }
 
 impl Filter {
-    fn to_str(self) -> String {
+    fn to_str(&self) -> String {
         match self {
-            Filter::All =>        "all".to_string(),
-            Filter::Assigned =>   "assigned".to_string(),
-            Filter::Created =>    "created".to_string(),
-            Filter::Mentioned =>  "mentioned".to_string(),
-            Filter::Subscribed => "subscribed".to_string()
+            &Filter::All =>        "all".to_string(),
+            &Filter::Assigned =>   "assigned".to_string(),
+            &Filter::Created =>    "created".to_string(),
+            &Filter::Mentioned =>  "mentioned".to_string(),
+            &Filter::Subscribed => "subscribed".to_string()
         }
     }
 }
@@ -198,11 +198,11 @@ pub enum State {
 }
 
 impl State {
-    fn to_str(self) -> String {
+    fn to_str(&self) -> String {
         match self {
-            State::All    => "all".to_string(),
-            State::Closed => "closed".to_string(),
-            State::Open   => "open".to_string()
+            &State::All    => "all".to_string(),
+            &State::Closed => "closed".to_string(),
+            &State::Open   => "open".to_string()
         }
     }
 }
@@ -216,11 +216,11 @@ pub enum Sort {
 }
 
 impl Sort {
-    fn to_str(self) -> String {
+    fn to_str(&self) -> String {
         match self {
-            Sort::Comments => "comments".to_string(),
-            Sort::Created  => "created".to_string(),
-            Sort::Updated  => "updated".to_string()
+            &Sort::Comments => "comments".to_string(),
+            &Sort::Created  => "created".to_string(),
+            &Sort::Updated  => "updated".to_string()
         }
     }
 }
@@ -234,10 +234,10 @@ pub enum Direction {
 }
 
 impl Direction {
-    fn to_str(self) -> String {
+    fn to_str(&self) -> String {
         match self {
-            Direction::Ascending  => "asc".to_string(),
-            Direction::Descending => "desc".to_string()
+            &Direction::Ascending  => "asc".to_string(),
+            &Direction::Descending => "desc".to_string()
         }
     }
 }
