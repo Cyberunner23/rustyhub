@@ -506,7 +506,7 @@ impl IssuesExt for Client {
             query_pairs.append_pair("since", &since[..]);
         }
 
-        utils::request_endpoint(self, format!("/issues?{}", url.as_str()))
+        utils::request_endpoint(self, format!("/issues?{}", url.query().unwrap()))
     }
 
     fn get_user_issues(&mut self,
@@ -556,7 +556,7 @@ impl IssuesExt for Client {
             query_pairs.append_pair("since", &since[..]);
         }
 
-        utils::request_endpoint(self, format!("/user/issues?{}", url.as_str()))
+        utils::request_endpoint(self, format!("/user/issues?{}", url.query().unwrap()))
     }
 
     fn get_orgs_org_issues(&mut self,
@@ -607,7 +607,7 @@ impl IssuesExt for Client {
             query_pairs.append_pair("since", &since[..]);
         }
 
-        utils::request_endpoint(self, format!("/orgs/{}/issues?{}", org, url.as_str()))
+        utils::request_endpoint(self, format!("/orgs/{}/issues?{}", org, url.query().unwrap()))
     }
 
     fn get_repos_owner_repo_issues(&mut self,
@@ -667,7 +667,7 @@ impl IssuesExt for Client {
             query_pairs.append_pair("since", &since[..]);
         }
 
-        utils::request_endpoint(self, format!("/repos/{}/{}/issues?{}", owner, repo, url.as_str()))
+        utils::request_endpoint(self, format!("/repos/{}/{}/issues?{}", owner, repo, url.query().unwrap()))
     }
 
     fn get_repos_owner_repo_issues_number(&mut self, owner: String, repo: String, number: u64) -> Result<Issue, error::Error> {

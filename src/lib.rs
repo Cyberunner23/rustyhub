@@ -60,8 +60,7 @@ pub mod activity;
 pub mod auth;
 //TODO: Licenses once out of preview
 pub mod miscellaneous;
-//TODO: enterprise
-//TODO: gists
+pub mod gists;
 //TODO: git_data
 //TODO: integrations once out of preview
 pub mod issues;
@@ -73,6 +72,7 @@ pub mod issues;
 //TODO: repositories
 //TODO: search
 //TODO: users
+//TODO: enterprise
 //TODO: webhooks, include HMAC validation?
 
 pub mod client;

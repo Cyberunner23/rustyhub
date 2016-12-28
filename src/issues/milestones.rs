@@ -144,7 +144,7 @@ impl MilestonesExt for Client {
             }
         }
 
-        utils::request_endpoint(self, format!("/repos/{}/{}/milestones?{}", owner, repo, url.as_str()))
+        utils::request_endpoint(self, format!("/repos/{}/{}/milestones?{}", owner, repo, url.query().unwrap()))
     }
 
     fn get_repos_owner_repo_milestones_number(&mut self, owner: String, repo: String, number: u64) -> Result<Milestone, error::Error>{
