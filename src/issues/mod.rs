@@ -28,7 +28,10 @@ pub mod events;
 pub mod comments;
 /// Endpoints for issue labels.
 pub mod labels;
-
+/// Endpoints for issue milestones.
+pub mod milestones;
+//TODO: Implement timeline once out of preview
+//pub mod timeline;
 
 /// Return type for Issue endpoints and sub component for
 /// Issue Event responses
@@ -136,7 +139,7 @@ pub struct Milestone {
     pub closed_issues: u64,
     pub created_at:    String,
     pub updated_at:    String,
-    pub closed_at:     String,
+    pub closed_at:     Option<String>,
     pub due_on:        String
 }
 
