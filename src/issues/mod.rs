@@ -26,6 +26,8 @@ use utils;
 pub mod events;
 /// Endpoints for issue comments.
 pub mod comments;
+/// Endpoints for issue labels.
+pub mod labels;
 
 
 /// Return type for Issue endpoints and sub component for
