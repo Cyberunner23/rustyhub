@@ -14,6 +14,7 @@
 
 use client::Client;
 use common::User;
+use issues::Issue;
 use error;
 use utils;
 
@@ -42,72 +43,6 @@ pub struct IssueEventRepo {
     pub created_at: String,
     pub issue:      Issue
 }
-
-/// Sub-component for IssueEventRepo
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Issue {
-    pub id: u64,
-    pub url: String,
-    pub repository_url: String,
-    pub labels_url: String,
-    pub comments_url: String,
-    pub events_url: String,
-    pub html_url: String,
-    pub number: u64,
-    pub state: String,
-    pub title: String,
-    pub body: String,
-    pub user: User,
-    pub labels: Vec<Label>,
-    pub assignee: User,
-    pub milestone: Milestone,
-    pub locked: bool,
-    pub comments: u64,
-    pub pull_request: PullRequest,
-    pub closed_at: Option<String>,
-    pub created_at: String,
-    pub updated_at: String
-}
-
-/// Sub-component for Issue
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Label {
-    pub id:      u64,
-    pub url:     String,
-    pub name:    String,
-    pub color:   String,
-    pub default: bool
-}
-
-/// Sub-component for Issue
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Milestone {
-    pub url:           String,
-    pub html_url:      String,
-    pub labels_url:    String,
-    pub id:            u64,
-    pub number:        String,
-    pub state:         String,
-    pub title:         String,
-    pub description:   String,
-    pub creator:       User,
-    pub open_issues:   u64,
-    pub closed_issues: u64,
-    pub created_at:    String,
-    pub updated_at:    String,
-    pub closed_at:     String,
-    pub due_on:        String
-}
-
-/// Sub-component for Issue
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct PullRequest {
-    pub url:       String,
-    pub html_url:  String,
-    pub diff_url:  String,
-    pub patch_url: String
-}
-
 
 ////////////////////////////////////////////////////////////
 //                    Extension Trait                     //

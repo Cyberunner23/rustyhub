@@ -78,7 +78,7 @@ pub struct Repository {
 
 /// Sub-component for the Repository and the response type
 /// some endpoints
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct User {
     pub login:               String,
     pub id:                  u64,
