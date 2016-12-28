@@ -47,12 +47,13 @@ pub struct Issue {
     pub milestone:      Milestone,
     pub locked:         bool,
     pub comments:       u64,
-    pub pull_request:   PullRequest,
+    pub pull_request:   Option<PullRequest>,
     pub closed_at:      Option<String>,
     pub created_at:     String,
     pub updated_at:     String,
     pub repository:     Option<Repository>,
-    pub closed_by:      Option<User>
+    pub closed_by:      Option<User>,
+    pub assignees:      Option<Vec<User>>
 }
 
 /// Parameters for the creation of an issue.
