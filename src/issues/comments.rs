@@ -16,22 +16,10 @@ use hyper::{Error as HyperError, Url};
 use serde_json;
 
 use client::Client;
-use common::User;
+use common::{Comment, User};
 use issues::{Direction, Sort};
 use error;
 use utils;
-
-/// Response element to the list comments endpoints.
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-pub struct Comment {
-    pub id:         u64,
-    pub url:        String,
-    pub html_url:   String,
-    pub body:       String,
-    pub user:       User,
-    pub created_at: String,
-    pub updated_at: String
-}
 
 /// Internal parameter
 #[derive(Clone, Debug, PartialEq, Serialize)]

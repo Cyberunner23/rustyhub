@@ -108,4 +108,16 @@ pub struct Permissions {
     pub pull:  bool
 }
 
+///Common structures found across some Github API responses.
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct Comment {
+    pub id:         u64,
+    pub url:        String,
+    pub html_url:   Option<String>,
+    pub body:       String,
+    pub user:       User,
+    pub created_at: String,
+    pub updated_at: String
+}
+
 //TODO: Tests
