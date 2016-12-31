@@ -5,12 +5,12 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-//! # Commits
+//! # References
 //!
 //! These are the responses and API call functions related
-//! to the commits endpoints of the API.
+//! to the references endpoints of the API.
 //!
-//! Reference: https://developer.github.com/v3/git/commits/
+//! Reference: https://developer.github.com/v3/git/refs/
 
 use serde_json;
 

@@ -9,5 +9,6 @@ pub mod blobs;
 pub mod commits;
 pub mod references;
 pub mod tags;
+pub mod trees;
 
 //TODO: TESTS
