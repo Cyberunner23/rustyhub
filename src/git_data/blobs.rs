@@ -103,7 +103,6 @@ impl BlobExt for Client {
         let mut response     = try!(self.post_body(format!("/repos/{}/{}/git/blobs", owner, repo), None, body_data));
         let     response_str = try!(Client::response_to_string(&mut response));
         serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
-
     }
 }
 
