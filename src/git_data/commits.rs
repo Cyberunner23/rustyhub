@@ -38,7 +38,7 @@ pub struct Commit {
 }
 
 /// Sub-component of Commit
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CommitUser {
     /// Date at which the commit was authored or committed,
     /// a timestamp in ISO 8601 (`YYYY-MM-DDTHH:MM:SSZ`)

@@ -6,5 +6,6 @@
 // copied, modified, or distributed except according to those terms.
 
 pub mod blobs;
+pub mod commits;
 
 //TODO: TESTS
