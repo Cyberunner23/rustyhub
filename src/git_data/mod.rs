@@ -7,5 +7,6 @@
 
 pub mod blobs;
 pub mod commits;
+pub mod references;
 
 //TODO: TESTS

@@ -97,8 +97,8 @@ pub struct GistParam {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct FileContents {
     #[serde(skip_serializing_if = "Option::is_none")]
-    filename: Option<String>,
-    content: String
+    pub filename: Option<String>,
+    pub content: String
 }
 
 ////////////////////////////////////////////////////////////

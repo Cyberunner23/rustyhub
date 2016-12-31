@@ -110,13 +110,13 @@ impl CommitsExt for Client {
     }
 
     fn post_repos_owner_repo_git_commits(&mut self, owner: String, repo: String, commit: CommitParam) -> Result<Commit, error::Error>{
+
         //Create body
         let body_data = try!(serde_json::to_string(&commit).map_err(error::Error::Parsing));
 
         let mut response     = try!(self.post_body(format!("/repos/{}/{}/git/commits", owner, repo), None, body_data));
         let     response_str = try!(Client::response_to_string(&mut response));
         serde_json::from_str(&response_str[..]).map_err(error::Error::Parsing)
-
     }
 }
 
