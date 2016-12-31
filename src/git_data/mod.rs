@@ -8,5 +8,6 @@
 pub mod blobs;
 pub mod commits;
 pub mod references;
+pub mod tags;
 
 //TODO: TESTS
