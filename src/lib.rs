@@ -61,7 +61,7 @@ pub mod auth;
 //TODO: Licenses once out of preview
 pub mod miscellaneous;
 pub mod gists;
-//TODO: git_data
+pub mod git_data;
 //TODO: integrations once out of preview
 pub mod issues;
 //TODO: migration once out of preview
