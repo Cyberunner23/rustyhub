@@ -16,7 +16,7 @@ use hyper::{Error as HyperError, Url};
 use serde_json;
 
 use client::Client;
-use common::{Comment, User};
+use common::Comment;
 use issues::{Direction, Sort};
 use error;
 use utils;
