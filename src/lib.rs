@@ -59,13 +59,13 @@ extern crate serde_json;
 pub mod activity;
 pub mod auth;
 //TODO: Licenses once out of preview
-pub mod miscellaneous;
 pub mod gists;
 pub mod git_data;
 //TODO: integrations once out of preview
 pub mod issues;
 //TODO: migration once out of preview
-//TODO: organizations
+pub mod miscellaneous;
+pub mod organizations;
 //TODO: projects once out of preview
 //TODO: pull_requests
 //TODO: reactions once out of preview
