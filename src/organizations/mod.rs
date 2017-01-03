@@ -19,6 +19,11 @@ use client::Client;
 use error;
 use utils;
 
+/// Endpoints for Members.
+pub mod members;
+
+//TODO: Once out of preview
+// pub mod outside_collaborators
 
 /// Return type for Organizations endpoints.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
@@ -28,12 +33,12 @@ pub struct Organization {
     pub url:                 String,
     pub repos_url:           String,
     pub events_url:          String,
-    pub hooks_url:           String,
-    pub issues_url:          String,
+    pub hooks_url:           Option<String>,
+    pub issues_url:          Option<String>,
     pub members_url:         String,
     pub public_members_url:  String,
     pub avatar_url:          String,
-    pub description:         String,
+    pub description:         Option<String>,
     pub name:                Option<String>,
     pub company:             Option<String>,
     pub blog:                Option<String>,
