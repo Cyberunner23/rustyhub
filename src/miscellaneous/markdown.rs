@@ -13,7 +13,7 @@
 //! Reference: https://developer.github.com/v3/markdown/
 
 use hyper::header::{Accept, ContentType, qitem};
-use hyper::mime::{Mime, TopLevel, SubLevel};
+use hyper::mime::{Mime};
 use serde_json;
 
 use client::Client;

@@ -14,7 +14,7 @@
 //!
 //! Reference: https://developer.github.com/v3/issues/
 
-use hyper::{Error as HyperError, Url};
+use hyper::{Error as HyperError};
 use serde_json;
 
 use client::Client;

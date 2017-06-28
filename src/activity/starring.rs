@@ -12,9 +12,9 @@
 //!
 //! Reference: https://developer.github.com/v3/activity/starring/
 
-use hyper::{Error as HyperError, Url};
+use hyper::{Error as HyperError};
 use hyper::header::{Accept, ContentLength, qitem};
-use hyper::mime::{Mime, TopLevel, SubLevel};
+use hyper::mime::{Mime};
 
 use common::{Repository, User};
 use client::Client;

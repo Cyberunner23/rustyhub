@@ -11,7 +11,7 @@
 ///! to the members endpoints of the API.
 ///!
 
-use hyper::{Error as HyperError, Url};
+use hyper::{Error as HyperError};
 use serde_json;
 
 use client::Client;

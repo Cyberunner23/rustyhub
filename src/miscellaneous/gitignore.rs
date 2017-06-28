@@ -13,7 +13,7 @@
 //! Reference: https://developer.github.com/v3/activity/watching/
 
 use hyper::header::{Accept, qitem};
-use hyper::mime::{Mime, TopLevel, SubLevel};
+use hyper::mime::{Mime};
 
 use client::Client;
 use error;

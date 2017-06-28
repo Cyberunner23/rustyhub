@@ -10,8 +10,8 @@ use std::io::Read;
 
 use serde_json;
 
-use hyper::{Error as HyperError, Url};
-use hyper::client::{Client as HyperClient, Body, Response};
+use hyper::{Error as HyperError};
+use hyper::client::{Client as HyperClient, Response};
 //use hyper::error::Error as HyperError;
 use hyper::header::{Accept,
                     Authorization,
@@ -22,7 +22,7 @@ use hyper::header::{Accept,
                     qitem,
                     UserAgent};
 use hyper::method::Method;
-use hyper::mime::{Mime, TopLevel, SubLevel};
+use hyper::mime::{Mime};
 use hyper::status::StatusCode;
 
 use error;

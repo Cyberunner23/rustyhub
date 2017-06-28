@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/activity/notifications/
 
-use hyper::{Error as HyperError, Url};
+use hyper::{Error as HyperError};
 use serde_json;
 
 use activity::common::Subscription;

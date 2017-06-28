@@ -13,7 +13,7 @@
 //! Reference: https://developer.github.com/v3/gists/
 
 use std::collections::BTreeMap;
-use hyper::{Error as HyperError, Url};
+use hyper::{Error as HyperError};
 use serde_json;
 
 use client::Client;

@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/activity/watching/
 
-use hyper::{Error as HyperError, Url};
+use hyper::{Error as HyperError};
 
 use activity::common::Subscription;
 use client::Client;
