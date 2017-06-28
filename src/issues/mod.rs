@@ -14,7 +14,7 @@
 //!
 //! Reference: https://developer.github.com/v3/issues/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use client::Client;
@@ -467,7 +467,7 @@ impl IssuesExt for Client {
                   direction: Option<Direction>,
                   since: String) -> Result<Vec<Issue>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/issues", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/issues", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -517,7 +517,7 @@ impl IssuesExt for Client {
                        direction: Option<Direction>,
                        since: String) -> Result<Vec<Issue>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/user/issues", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/user/issues", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -568,7 +568,7 @@ impl IssuesExt for Client {
                            direction: Option<Direction>,
                            since: String) -> Result<Vec<Issue>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/orgs/{}/issues", self.api_url, org)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/orgs/{}/issues", self.api_url, org)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -623,7 +623,7 @@ impl IssuesExt for Client {
                                    direction: Option<Direction>,
                                    since: String) -> Result<Vec<Issue>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}/issues", self.api_url, owner, repo)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/repos/{}/{}/issues", self.api_url, owner, repo)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

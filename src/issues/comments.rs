@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/issues/comments/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use client::Client;
@@ -107,7 +107,7 @@ impl CommentsExt for Client {
 
     fn get_repos_owner_repo_issues_number_comments(&mut self, owner: String, repo: String, number: u64, since: String) -> Result<Vec<Comment>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}/issues/{}/comments", self.api_url, owner, repo, number)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/repos/{}/{}/issues/{}/comments", self.api_url, owner, repo, number)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -124,7 +124,7 @@ impl CommentsExt for Client {
 
     fn get_repos_owner_repo_issues_comments(&mut self, owner: String, repo: String, sort: Option<Sort>, direction: Option<Direction>, since: String) -> Result<Vec<Comment>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}/issues/comments", self.api_url, owner, repo)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/repos/{}/{}/issues/comments", self.api_url, owner, repo)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

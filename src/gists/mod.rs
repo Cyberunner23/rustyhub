@@ -13,7 +13,7 @@
 //! Reference: https://developer.github.com/v3/gists/
 
 use std::collections::BTreeMap;
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use client::Client;
@@ -244,7 +244,7 @@ impl GistsExt for Client {
 
     fn get_users_username_gists(&mut self, username: String, since: String) -> Result<Vec<Gist>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/users/{}/gists", self.api_url, username)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/users/{}/gists", self.api_url, username)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -261,7 +261,7 @@ impl GistsExt for Client {
 
     fn get_gists(&mut self, since: String) -> Result<Vec<Gist>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/gists", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/gists", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -278,7 +278,7 @@ impl GistsExt for Client {
 
     fn get_gists_public(&mut self, since: String) -> Result<Vec<Gist>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/gists/public", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/gists/public", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -295,7 +295,7 @@ impl GistsExt for Client {
 
     fn get_gists_starred(&mut self, since: String) -> Result<Vec<Gist>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/gists/starred", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/gists/starred", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

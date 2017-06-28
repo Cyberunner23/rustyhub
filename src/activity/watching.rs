@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/activity/watching/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 
 use activity::common::Subscription;
 use client::Client;
@@ -103,7 +103,7 @@ impl WatchingExt for Client {
 
     fn put_repos_owner_repo_subscription(&mut self, owner: String, repo: String, subscribed: bool, ignored: bool) -> Result<Subscription, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}/subscription", self.api_url, owner, repo)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/repos/{}/{}/subscription", self.api_url, owner, repo)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

@@ -10,7 +10,7 @@ use std::io::Read;
 
 use serde_json;
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use hyper::client::{Client as HyperClient, Response};
 //use hyper::error::Error as HyperError;
 use hyper::header::{Accept,
@@ -153,7 +153,7 @@ impl Client {
             },
             &Auth::OAuth2KeySecret(ref client_id, ref client_secret) => {
 
-                let mut url_parsed = match Url::parse(&url[..]) {
+                let mut url_parsed = match Uri::to_str(&url[..]) {
                     Ok(url)  => url,
                     Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
                 };
@@ -172,7 +172,7 @@ impl Client {
                 headers.set(Authorization(Basic{username: username.clone(), password: Some(password.clone())}));
 
                 if let &Some(ref token) = otp_token {
-                    let mut url_parsed = match Url::parse(&url[..]) {
+                    let mut url_parsed = match Uri::to_str(&url[..]) {
                         Ok(url)  => url,
                         Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
                     };

@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/orgs/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use client::Client;
@@ -151,7 +151,7 @@ impl OrganizationsExt for Client {
 
     fn get_organizations(&mut self, since: u64) -> Result<Vec<Organization>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/organizations", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/organizations", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/issues/labels/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use client::Client;
@@ -121,7 +121,7 @@ impl MilestonesExt for Client {
 
     fn get_repos_owner_repo_milestones(&mut self, owner: String, repo: String, state: Option<State>, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Milestone>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}/milestones", self.api_url, owner, repo)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/repos/{}/{}/milestones", self.api_url, owner, repo)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

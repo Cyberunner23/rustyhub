@@ -11,7 +11,7 @@
 ///! to the members endpoints of the API.
 ///!
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use client::Client;
@@ -251,7 +251,7 @@ impl MembersExt for Client {
 
     fn get_orgs_org_members(&mut self, org: String, filter: Option<Filter>, role: Option<RoleMemberList>) -> Result<Vec<User>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/orgs/{}/members", self.api_url, org)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/orgs/{}/members", self.api_url, org)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -319,7 +319,7 @@ impl MembersExt for Client {
 
     fn put_orgs_org_memberships_username(&mut self, org: String, username: String, role: Option<RoleUpdateMembership>) -> Result<OrgMembership, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/orgs/{}/memberships/{}", self.api_url, org, username)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/orgs/{}/memberships/{}", self.api_url, org, username)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -348,7 +348,7 @@ impl MembersExt for Client {
 
     fn get_user_memberships_orgs(&mut self, state: Option<State>) -> Result<Vec<OrgMembership>, error::Error>{
 
-        let mut url = match Url::parse(&format!("{}/user/memberships/orgs", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/user/memberships/orgs", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

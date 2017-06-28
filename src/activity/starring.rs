@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/activity/starring/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use hyper::header::{Accept, ContentLength, qitem};
 use hyper::mime::{Mime};
 
@@ -181,7 +181,7 @@ impl StarringExt for Client {
 
     fn get_users_username_starred(&mut self, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/users/{}/starred", self.api_url, username)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/users/{}/starred", self.api_url, username)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -214,7 +214,7 @@ impl StarringExt for Client {
 
     fn get_user_starred(&mut self, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<Repository>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/user/starred", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/user/starred", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -248,7 +248,7 @@ impl StarringExt for Client {
 
     fn get_users_username_starred_timestamp(&mut self, username: String, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/users/{}/starred", self.api_url, username)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/users/{}/starred", self.api_url, username)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -286,7 +286,7 @@ impl StarringExt for Client {
 
     fn get_user_starred_timestamp(&mut self, sort: Option<Sort>, direction: Option<Direction>) -> Result<Vec<ListRepoStarTimeStamp>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/user/starred", self.api_url)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/user/starred", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };

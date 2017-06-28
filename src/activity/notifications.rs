@@ -12,7 +12,7 @@
 //!
 //! Reference: https://developer.github.com/v3/activity/notifications/
 
-use hyper::{Error as HyperError};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 
 use activity::common::Subscription;
@@ -157,7 +157,7 @@ impl NotificationsExt for Client {
 
     fn get_notifications(&mut self, all: Option<bool>, participating: Option<bool>, since: Option<String>, before: Option<String>) -> Result<Vec<Notification>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/notifications", self.api_url)[..]) {
+        let mut url = match Uri::from_str(&format!("{}/notifications", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -188,7 +188,7 @@ impl NotificationsExt for Client {
 
     fn get_repos_owner_repo_notifications(&mut self, owner: String, repo: String, all: Option<bool>, participating: Option<bool>, since: Option<String>, before: Option<String>) -> Result<Vec<Notification>, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}/notifications", self.api_url, owner, repo)[..]) {
+        let mut url = match Uri::from_str(&format!("{}/repos/{}/{}/notifications", self.api_url, owner, repo)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -220,7 +220,7 @@ impl NotificationsExt for Client {
 
     fn put_notifications(&mut self, last_read_at: String) -> Result<(), error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/notifications", self.api_url)[..]) {
+        let mut url = match Uri::to_string(&format!("{}/notifications", self.api_url)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -240,7 +240,7 @@ impl NotificationsExt for Client {
 
     fn put_repos_owner_repo_notifications(&mut self, owner: String, repo: String, last_read_at: String) -> Result<(), error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/repos/{}/{}notifications", self.api_url, owner, repo)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/repos/{}/{}notifications", self.api_url, owner, repo)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
@@ -275,7 +275,7 @@ impl NotificationsExt for Client {
 
     fn put_notifications_threads_id_subscription(&mut self, id: String, subscribed: bool, ignored: bool) -> Result<Subscription, error::Error> {
 
-        let mut url = match Url::parse(&format!("{}/notifications/threads/{}/subscription", self.api_url, id)[..]) {
+        let mut url = match Uri::to_str(&format!("{}/notifications/threads/{}/subscription", self.api_url, id)[..]) {
             Ok(url)  => url,
             Err(err) => return Err(error::Error::HTTP(HyperError::Uri(err)))
         };
