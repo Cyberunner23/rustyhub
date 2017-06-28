@@ -21,9 +21,7 @@ use hyper::header::{Accept,
                     Location,
                     qitem,
                     UserAgent};
-use hyper::method::Method;
-use hyper::mime::{Mime};
-use hyper::status::StatusCode;
+use hyper::mime::Mime;
 
 use error;
 use auth::auth::Auth;
